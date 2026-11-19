@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>CaixaMaker.App</RootNamespace>
+    <AssemblyName>CaixaMaker</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PublishProtocol)' != '' or '$(IsPublishing)' == 'true'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <AllowedReferenceRelatedFileExtensions>none</AllowedReferenceRelatedFileExtensions>
+  </PropertyGroup>
+
+  <Target Name="StripPublishPdbs" AfterTargets="ComputeFilesToPublish" Condition="'$(PublishProtocol)' != '' or '$(IsPublishing)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Content Include="Assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.9457" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.260224002" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CaixaMaker.Core\CaixaMaker.Core.csproj" />
+    <ProjectReference Include="..\CaixaMaker.Cam\CaixaMaker.Cam.csproj" />
+    <ProjectReference Include="..\CaixaMaker.Presentation\CaixaMaker.Presentation.csproj" />
+  </ItemGroup>
+</Project>

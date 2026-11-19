@@ -1,0 +1,455 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Areas.ManufacturingAreaRightPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer
+            Grid.Row="0"
+            Padding="0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="0">
+
+            <!-- Seção 1: Auditoria Pré-Corte (SAT + Kerf) -->
+            <cad:CadSectionPane Title="AUDITORIA PRÉ-CORTE (SAT + KERF)">
+                <cad:CadSectionPane.HeaderActionContent>
+                    <Button
+                        Height="18"
+                        MinWidth="0"
+                        MinHeight="0"
+                        Padding="6,0"
+                        Background="{ThemeResource CmElevatedSurfaceBrush}"
+                        BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+                        BorderThickness="1"
+                        Click="OnRevalidateClick"
+                        CornerRadius="2"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        ToolTipService.ToolTip="Executar validação geométrica SAT e verificação de kerf">
+                        <TextBlock VerticalAlignment="Center" Text="↻ Revalidar" />
+                    </Button>
+                </cad:CadSectionPane.HeaderActionContent>
+
+                <StackPanel Spacing="6">
+                    <cad:CadStatusBadge
+                        x:Name="PreCutAuditBadge"
+                        HorizontalAlignment="Left"
+                        Kind="Valid"
+                        Text="APROVADA PARA CORTE" />
+
+                    <cad:CadMetricTable x:Name="PreCutMetricsTable" />
+
+                    <cad:CadPropertyRow
+                        x:Name="LaserBedRow"
+                        Label="Mesa Laser"
+                        LabelWidth="84"
+                        ShowBottomDivider="False">
+                        <ComboBox
+                            x:Name="LaserBedCombo"
+                            DisplayMemberPath="Label"
+                            SelectionChanged="OnLaserBedChanged"
+                            Style="{StaticResource CadComboBoxStyle}" />
+                    </cad:CadPropertyRow>
+
+                    <StackPanel
+                        x:Name="CustomLaserBedPanel"
+                        Spacing="2"
+                        Visibility="Collapsed">
+                        <cad:CadPropertyRow Label="Largura X" LabelWidth="84">
+                            <cad:CadNumericInput
+                                x:Name="CustomBedWidthInput"
+                                DecimalPlaces="1"
+                                Maximum="5000"
+                                Minimum="50"
+                                Step="10"
+                                Unit="mm"
+                                ValueChanged="OnCustomBedWidthChanged" />
+                        </cad:CadPropertyRow>
+                        <cad:CadPropertyRow
+                            Label="Profund. Y"
+                            LabelWidth="84"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="CustomBedHeightInput"
+                                DecimalPlaces="1"
+                                Maximum="5000"
+                                Minimum="50"
+                                Step="10"
+                                Unit="mm"
+                                ValueChanged="OnCustomBedHeightChanged" />
+                        </cad:CadPropertyRow>
+                    </StackPanel>
+
+                    <Border
+                        x:Name="LaserBedFitBanner"
+                        Padding="7,5"
+                        BorderThickness="1"
+                        CornerRadius="2">
+                        <TextBlock
+                            x:Name="LaserBedFitText"
+                            FontSize="11"
+                            TextWrapping="Wrap" />
+                    </Border>
+
+                    <StackPanel
+                        x:Name="AuditIssuesList"
+                        Spacing="3"
+                        Visibility="Collapsed" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 2: Escopo e Exportação 1:1 (mm) -->
+            <cad:CadSectionPane BadgeText="1:1 mm" Title="ESCOPO E EXPORTAÇÃO 1:1 (MM)">
+                <StackPanel Spacing="5">
+                    <Grid ColumnSpacing="4" RowSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Button
+                            x:Name="ScopeFullBoxBtn"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Height="28"
+                            Click="OnScopeFullBoxClick"
+                            Content="Folha Completa (1:1)"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                        <Button
+                            x:Name="ScopePanelCombinedBtn"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Height="28"
+                            Click="OnScopePanelCombinedClick"
+                            Content="Peça Individual"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                        <Button
+                            x:Name="ScopeEngraveOnlyBtn"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Height="28"
+                            Click="OnScopeEngraveOnlyClick"
+                            Content="Somente Gravação"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                        <Button
+                            x:Name="ScopeZipPresetBtn"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Height="28"
+                            Click="OnScopeZipPresetClick"
+                            Content="Pacote Completo (.ZIP)"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                    </Grid>
+
+                    <cad:CadPropertyRow
+                        x:Name="SinglePanelRow"
+                        Label="Chapa alvo"
+                        LabelWidth="84"
+                        ShowBottomDivider="False"
+                        Visibility="Collapsed">
+                        <ComboBox
+                            x:Name="SinglePanelCombo"
+                            DisplayMemberPath="Label"
+                            SelectionChanged="OnSinglePanelChanged"
+                            Style="{StaticResource CadComboBoxStyle}" />
+                    </cad:CadPropertyRow>
+
+                    <StackPanel
+                        x:Name="ZipOptionsPanel"
+                        Spacing="1"
+                        Visibility="Visible">
+                        <CheckBox
+                            x:Name="IncludeFullSheetCheck"
+                            MinHeight="22"
+                            Padding="6,0,0,0"
+                            Checked="OnZipOptionsChanged"
+                            Content="Incluir folha completa no ZIP"
+                            FontSize="11.5"
+                            Unchecked="OnZipOptionsChanged" />
+                        <CheckBox
+                            x:Name="IncludeEngraveOnlyCheck"
+                            MinHeight="22"
+                            Padding="6,0,0,0"
+                            Checked="OnZipOptionsChanged"
+                            Content="Incluir SVG apenas gravação por face"
+                            FontSize="11.5"
+                            Unchecked="OnZipOptionsChanged" />
+                    </StackPanel>
+
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Column="0"
+                            Click="OnExportSvgClick"
+                            Content="SVG 1:1"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadActionButtonStyle}" />
+                        <Button
+                            Grid.Column="1"
+                            Click="OnExportDxfClick"
+                            Content="DXF R2000"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadActionButtonStyle}" />
+                        <Button
+                            Grid.Column="2"
+                            Click="OnExportPdfClick"
+                            Content="PDF 1:1"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadActionButtonStyle}" />
+                    </Grid>
+
+                    <Button
+                        Height="28"
+                        HorizontalAlignment="Stretch"
+                        Click="OnExportZipClick"
+                        Content="Gerar Pacote Completo CNC (.ZIP)"
+                        Style="{StaticResource PrimaryAccentButtonStyle}" />
+
+                    <Button
+                        Height="26"
+                        Click="OnExportProjectPackageClick"
+                        Content="Exportar Projeto Editável (.cmaker)"
+                        Style="{StaticResource CadSegmentedButtonStyle}" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 3: Calibração de Lote MDF (Pente de Kerf) -->
+            <cad:CadSectionPane
+                x:Name="KerfCalibrationSection"
+                BadgeText="3.0 mm"
+                Title="CALIBRAÇÃO DE LOTE MDF (PENTE DE KERF)">
+                <StackPanel Spacing="5">
+                    <TextBlock
+                        x:Name="KerfCombSummaryText"
+                        FontSize="10.5"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="11 rasgos (-0.25 a +0.25 mm, passo 0.05 mm) + espiga de 3.0 mm"
+                        TextWrapping="Wrap" />
+
+                    <Grid ColumnSpacing="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="KerfPresetDefaultBtn"
+                            Grid.Column="0"
+                            Height="22"
+                            MinHeight="22"
+                            Padding="3,0"
+                            Click="OnKerfPresetClick"
+                            Content="Padrão ±0.25"
+                            FontSize="9.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="default"
+                            ToolTipService.ToolTip="11 rasgos com passo de 0.05 mm (-0.25 a +0.25 mm)" />
+                        <Button
+                            x:Name="KerfPresetWideBtn"
+                            Grid.Column="1"
+                            Height="22"
+                            MinHeight="22"
+                            Padding="3,0"
+                            Click="OnKerfPresetClick"
+                            Content="Amplo ±0.50"
+                            FontSize="9.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="wide"
+                            ToolTipService.ToolTip="11 rasgos com passo de 0.10 mm (-0.50 a +0.50 mm)" />
+                        <Button
+                            x:Name="KerfPresetExtendedBtn"
+                            Grid.Column="2"
+                            Height="22"
+                            MinHeight="22"
+                            Padding="3,0"
+                            Click="OnKerfPresetClick"
+                            Content="Estendido 15"
+                            FontSize="9.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="extended"
+                            ToolTipService.ToolTip="15 rasgos com passo de 0.05 mm (-0.35 a +0.35 mm)" />
+                    </Grid>
+
+                    <cad:CadPropertyRow
+                        Label="Nº de rasgos"
+                        LabelWidth="84">
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="KerfSlots7Btn"
+                                Grid.Column="0"
+                                Height="22"
+                                MinHeight="22"
+                                Click="OnKerfSlotCountClick"
+                                Content="7"
+                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                FontSize="10"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="7" />
+                            <Button
+                                x:Name="KerfSlots11Btn"
+                                Grid.Column="1"
+                                Height="22"
+                                MinHeight="22"
+                                Click="OnKerfSlotCountClick"
+                                Content="11"
+                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                FontSize="10"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="11" />
+                            <Button
+                                x:Name="KerfSlots15Btn"
+                                Grid.Column="2"
+                                Height="22"
+                                MinHeight="22"
+                                Click="OnKerfSlotCountClick"
+                                Content="15"
+                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                FontSize="10"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="15" />
+                            <Button
+                                x:Name="KerfSlots21Btn"
+                                Grid.Column="3"
+                                Height="22"
+                                MinHeight="22"
+                                Click="OnKerfSlotCountClick"
+                                Content="21"
+                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                FontSize="10"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="21" />
+                        </Grid>
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow
+                        Label="Passo (Δ mm)"
+                        LabelWidth="84"
+                        ShowBottomDivider="False">
+                        <cad:CadNumericInput
+                            x:Name="KerfStepInput"
+                            DecimalPlaces="2"
+                            Maximum="0.25"
+                            Minimum="0.02"
+                            Step="0.01"
+                            Unit="mm"
+                            ValueChanged="OnKerfStepChanged" />
+                    </cad:CadPropertyRow>
+
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Column="0"
+                            Height="25"
+                            MinHeight="25"
+                            Click="OnExportKerfCombSvgClick"
+                            Content="Pente SVG"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Gerar gabarito de calibração de kerf em SVG 1:1 para a espessura atual" />
+                        <Button
+                            Grid.Column="1"
+                            Height="25"
+                            MinHeight="25"
+                            Click="OnExportKerfCombDxfClick"
+                            Content="Pente DXF"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Gerar gabarito de calibração de kerf em DXF R2000 (AC1015)" />
+                        <Button
+                            Grid.Column="2"
+                            Height="25"
+                            MinHeight="25"
+                            Click="OnExportKerfCombPdfClick"
+                            Content="Pente PDF"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Gerar gabarito de calibração de kerf em PDF 1:1" />
+                    </Grid>
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 4: Arquivos Gerados na Sessão -->
+            <cad:CadSectionPane
+                x:Name="RecentOutputsSection"
+                BadgeText="0"
+                Title="ARQUIVOS GERADOS NA SESSÃO">
+                <cad:CadSectionPane.HeaderActionContent>
+                    <Button
+                        Height="18"
+                        MinWidth="0"
+                        MinHeight="0"
+                        Padding="6,0"
+                        Background="{ThemeResource CmElevatedSurfaceBrush}"
+                        BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+                        BorderThickness="1"
+                        Click="OnOpenOutputsFolderClick"
+                        CornerRadius="2"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        ToolTipService.ToolTip="Abrir diretório de saídas CAM no Explorador do Windows">
+                        <TextBlock VerticalAlignment="Center" Text="Abrir Pasta" />
+                    </Button>
+                </cad:CadSectionPane.HeaderActionContent>
+
+                <StackPanel Spacing="5">
+                    <TextBlock
+                        x:Name="LastExportStatusText"
+                        FontSize="11"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="Pronto para gerar arquivos CNC/CAM."
+                        TextWrapping="Wrap" />
+
+                    <StackPanel x:Name="RecentOutputsPanel" Spacing="2" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Rodapé fixo do fluxo guiado (Etapa 3 -> Etapa 2) -->
+        <Border
+            Grid.Row="1"
+            Padding="8,7"
+            Background="{ThemeResource CmShellBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,1,0,0">
+            <Button
+                x:Name="BackToPersonalizationBtn"
+                Height="26"
+                MinHeight="26"
+                HorizontalAlignment="Stretch"
+                Click="OnBackToPersonalizationClick"
+                Content="← Voltar para Personalização"
+                Style="{StaticResource CadSegmentedButtonStyle}"
+                ToolTipService.ToolTip="Retornar para Etapa 2: Personalização CNC (Alt+2)" />
+        </Border>
+    </Grid>
+</UserControl>

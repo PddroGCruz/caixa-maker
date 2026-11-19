@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <Product>Caixa Maker</Product>
+    <Company>Laboratório IFMaker do Juruá — IFAC Campus Cruzeiro do Sul</Company>
+    <Authors>Pedro G. Cruz (PddroGCruz) &lt;ggcostcr@gmail.com&gt;</Authors>
+    <Copyright>Copyright © 2026 Laboratório IFMaker do Juruá — IFAC • Desenvolvido por Pedro G. Cruz (PddroGCruz)</Copyright>
+    <Description>Caixa Maker — Modelagem Paramétrica e Preparação CNC para MDF (Laboratório IFMaker do Juruá / IFAC • Pedro G. Cruz / PddroGCruz)</Description>
+
+    <!-- Sincronizado a partir do arquivo VERSION na raiz por scripts/version_manager.py -->
+    <Version>2.3.0</Version>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
+    <InformationalVersion>2.3.0</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+</Project>

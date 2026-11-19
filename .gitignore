@@ -1,0 +1,55 @@
+# AI Agents, Handoffs & Local Assistant Context (not tracked in Git)
+*ANTIGRAVITY*
+*HANDOFF*
+CONTEXTO_HANDOFF_ANTIGRAVITY.md
+.agents/
+.gemini/
+.antigravity/
+.cursor/
+.claude/
+
+# .NET / WinUI 3 / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.cache
+x64/
+x86/
+ARM64/
+bld/
+PublishProfiles/*.user
+
+# Build, Publish & Visual Audit Artifacts
+artifacts/
+
+# Release Installers (attached directly to GitHub Releases)
+release/*.exe
+release/*.msi
+release/*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.env
+.env.*
+
+# Logs & OS Artifacts
+*.log
+*.tmp
+Thumbs.db
+Desktop.ini
+.DS_Store

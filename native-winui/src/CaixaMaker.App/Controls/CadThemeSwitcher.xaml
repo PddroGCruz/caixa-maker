@@ -1,0 +1,73 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadThemeSwitcher"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Border
+        Height="24"
+        Padding="1"
+        VerticalAlignment="Center"
+        Background="{ThemeResource CmInputBackgroundBrush}"
+        BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+        BorderThickness="1"
+        CornerRadius="{StaticResource CmControlCornerRadius}">
+        <StackPanel Orientation="Horizontal" Spacing="1">
+            <Button
+                x:Name="LightButton"
+                Height="20"
+                MinWidth="0"
+                MinHeight="0"
+                Padding="7,0"
+                BorderThickness="0"
+                Click="OnSegmentClick"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                FontSize="10.5"
+                Tag="Light"
+                ToolTipService.ToolTip="Tema Claro técnico">
+                <TextBlock
+                    x:Name="LightText"
+                    VerticalAlignment="Center"
+                    FontSize="10.5"
+                    Text="Claro" />
+            </Button>
+
+            <Button
+                x:Name="DarkButton"
+                Height="20"
+                MinWidth="0"
+                MinHeight="0"
+                Padding="7,0"
+                BorderThickness="0"
+                Click="OnSegmentClick"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                FontSize="10.5"
+                Tag="Dark"
+                ToolTipService.ToolTip="Tema Escuro grafite CAD">
+                <TextBlock
+                    x:Name="DarkText"
+                    VerticalAlignment="Center"
+                    FontSize="10.5"
+                    Text="Escuro" />
+            </Button>
+
+            <Button
+                x:Name="AutoButton"
+                Height="20"
+                MinWidth="0"
+                MinHeight="0"
+                Padding="7,0"
+                BorderThickness="0"
+                Click="OnSegmentClick"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                FontSize="10.5"
+                Tag="System"
+                ToolTipService.ToolTip="Seguir preferência do Windows">
+                <TextBlock
+                    x:Name="AutoText"
+                    VerticalAlignment="Center"
+                    FontSize="10.5"
+                    Text="Auto" />
+            </Button>
+        </StackPanel>
+    </Border>
+</UserControl>

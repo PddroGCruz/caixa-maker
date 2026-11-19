@@ -1,0 +1,435 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Areas.ModelingAreaLeftPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives">
+
+    <ScrollViewer
+        Padding="0"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="0">
+
+            <!-- Seção 1: Modelo Estrutural -->
+            <cad:CadSectionPane Title="MODELO ESTRUTURAL">
+                <cad:CadSectionPane.HeaderActionContent>
+                    <Button
+                        Height="18"
+                        MinWidth="0"
+                        MinHeight="0"
+                        Padding="6,0"
+                        Background="{ThemeResource CmElevatedSurfaceBrush}"
+                        BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+                        BorderThickness="1"
+                        Click="OnResetParametersClick"
+                        CornerRadius="2"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        ToolTipService.ToolTip="Restaurar medidas e folga padrão do modelo">
+                        <TextBlock VerticalAlignment="Center" Text="Restaurar" />
+                    </Button>
+                </cad:CadSectionPane.HeaderActionContent>
+
+                <StackPanel Spacing="5">
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="ModelWithLidBtn"
+                            Grid.Column="0"
+                            Click="OnSelectModelWithLidClick"
+                            Content="Tampa e Alças (6p)"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                        <Button
+                            x:Name="ModelOpenBoxBtn"
+                            Grid.Column="1"
+                            Click="OnSelectModelOpenBoxClick"
+                            Content="Caixa Aberta (5p)"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                    </Grid>
+
+                    <TextBlock
+                        x:Name="ModelIdSummaryText"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="6 chapas paramétricas • Tampa articulada e alças"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <Border
+                        x:Name="ValidationErrorBanner"
+                        Padding="6,4"
+                        Background="{ThemeResource CmStatusDangerSoftBrush}"
+                        BorderBrush="{ThemeResource CmStatusDangerBrush}"
+                        BorderThickness="1"
+                        CornerRadius="2"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            x:Name="ValidationErrorText"
+                            FontSize="11"
+                            Foreground="{ThemeResource CmStatusDangerBrush}"
+                            TextWrapping="Wrap" />
+                    </Border>
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 2: Dimensões (Externa Total vs. Interna Útil) -->
+            <cad:CadSectionPane
+                x:Name="DimensionsSectionPane"
+                BadgeText="mm"
+                Title="DIMENSÕES EXTERNAS (MM)">
+                <StackPanel Spacing="3">
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="DimensionExternalBtn"
+                            Grid.Column="0"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnDimensionModeExternalClick"
+                            Content="Externa Total"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Editar medidas externas totais; alterações na espessura modificam o vão interno" />
+                        <Button
+                            x:Name="DimensionInternalBtn"
+                            Grid.Column="1"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnDimensionModeInternalClick"
+                            Content="Interna Útil"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Editar e travar o vão livre interno; alterações na espessura expandem as medidas externas" />
+                    </Grid>
+
+                    <cad:CadPropertyRow Label="Largura (X)" LabelWidth="106">
+                        <cad:CadNumericInput
+                            x:Name="WidthInput"
+                            DecimalPlaces="1"
+                            Maximum="2000"
+                            Minimum="10"
+                            Step="1"
+                            Unit="mm"
+                            ValueChanged="OnWidthChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow Label="Profundidade (Z)" LabelWidth="106">
+                        <cad:CadNumericInput
+                            x:Name="DepthInput"
+                            DecimalPlaces="1"
+                            Maximum="2000"
+                            Minimum="10"
+                            Step="1"
+                            Unit="mm"
+                            ValueChanged="OnDepthChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow
+                        Label="Altura (Y)"
+                        LabelWidth="106"
+                        ShowBottomDivider="False">
+                        <cad:CadNumericInput
+                            x:Name="HeightInput"
+                            DecimalPlaces="1"
+                            Maximum="2000"
+                            Minimum="5"
+                            Step="1"
+                            Unit="mm"
+                            ValueChanged="OnHeightChanged" />
+                    </cad:CadPropertyRow>
+
+                    <Grid Margin="0,3,0,0" ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            x:Name="PresetSmallBtn"
+                            Grid.Column="0"
+                            Height="31"
+                            Padding="4,1"
+                            Click="OnPresetSmallClick"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Aplicar caixa pequena 120 × 90 × 60 mm">
+                            <StackPanel Spacing="0">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontSize="10.5"
+                                    FontWeight="SemiBold"
+                                    Text="Pequena" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontFamily="{StaticResource CmMonoFontFamily}"
+                                    FontSize="9.5"
+                                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                    Text="120×90×60" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button
+                            x:Name="PresetDefaultBtn"
+                            Grid.Column="1"
+                            Height="31"
+                            Padding="4,1"
+                            Click="OnPresetDefaultClick"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Aplicar caixa padrão 200 × 150 × 100 mm">
+                            <StackPanel Spacing="0">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontSize="10.5"
+                                    FontWeight="SemiBold"
+                                    Text="Padrão" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontFamily="{StaticResource CmMonoFontFamily}"
+                                    FontSize="9.5"
+                                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                    Text="200×150×100" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button
+                            x:Name="PresetLargeBtn"
+                            Grid.Column="2"
+                            Height="31"
+                            Padding="4,1"
+                            Click="OnPresetLargeClick"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            ToolTipService.ToolTip="Aplicar caixa grande 300 × 220 × 140 mm">
+                            <StackPanel Spacing="0">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontSize="10.5"
+                                    FontWeight="SemiBold"
+                                    Text="Grande" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontFamily="{StaticResource CmMonoFontFamily}"
+                                    FontSize="9.5"
+                                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                    Text="300×220×140" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 3: Material e Ajuste CNC (Kerf) -->
+            <cad:CadSectionPane Title="MATERIAL E AJUSTE CNC (KERF)">
+                <StackPanel Spacing="2">
+                    <cad:CadPropertyRow Label="MDF rápido" LabelWidth="106">
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="Mdf3Btn"
+                                Grid.Column="0"
+                                Height="24"
+                                MinHeight="24"
+                                Padding="2,1"
+                                Click="OnQuickThicknessClick"
+                                Content="3 mm"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="3.0" />
+                            <Button
+                                x:Name="Mdf4Btn"
+                                Grid.Column="1"
+                                Height="24"
+                                MinHeight="24"
+                                Padding="2,1"
+                                Click="OnQuickThicknessClick"
+                                Content="4 mm"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="4.0" />
+                            <Button
+                                x:Name="Mdf6Btn"
+                                Grid.Column="2"
+                                Height="24"
+                                MinHeight="24"
+                                Padding="2,1"
+                                Click="OnQuickThicknessClick"
+                                Content="6 mm"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="6.0" />
+                            <Button
+                                x:Name="Mdf9Btn"
+                                Grid.Column="3"
+                                Height="24"
+                                MinHeight="24"
+                                Padding="2,1"
+                                Click="OnQuickThicknessClick"
+                                Content="9 mm"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="9.0" />
+                        </Grid>
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow Label="Espessura (t)" LabelWidth="106">
+                        <cad:CadNumericInput
+                            x:Name="ThicknessInput"
+                            DecimalPlaces="1"
+                            Maximum="20"
+                            Minimum="0.5"
+                            Step="0.5"
+                            Unit="mm"
+                            ValueChanged="OnThicknessChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow
+                        Description="Compensação de kerf/folga nos encaixes finger joint. Valores positivos alargam os rasgos."
+                        Label="Folga / Kerf"
+                        LabelWidth="106"
+                        ShowBottomDivider="False">
+                        <cad:CadNumericInput
+                            x:Name="FolgaInput"
+                            DecimalPlaces="2"
+                            Maximum="2"
+                            Minimum="-2"
+                            Step="0.05"
+                            Unit="mm"
+                            ValueChanged="OnFolgaChanged" />
+                    </cad:CadPropertyRow>
+
+                    <Grid Margin="0,2,0,0" ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="FolgaTightBtn"
+                            Grid.Column="0"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickFolgaClick"
+                            Content="-0.10 mm"
+                            FontFamily="{StaticResource CmMonoFontFamily}"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="-0.10"
+                            ToolTipService.ToolTip="Encaixe justo com interferência (-0.10 mm)" />
+                        <Button
+                            x:Name="FolgaZeroBtn"
+                            Grid.Column="1"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickFolgaClick"
+                            Content="0.00 mm"
+                            FontFamily="{StaticResource CmMonoFontFamily}"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="0.00"
+                            ToolTipService.ToolTip="Corte nominal sem compensação (0.00 mm)" />
+                        <Button
+                            x:Name="FolgaLooseBtn"
+                            Grid.Column="2"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickFolgaClick"
+                            Content="+0.10 mm"
+                            FontFamily="{StaticResource CmMonoFontFamily}"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="0.10"
+                            ToolTipService.ToolTip="Encaixe com folga (+0.10 mm)" />
+                    </Grid>
+
+                    <StackPanel
+                        x:Name="AdvisoriesPanel"
+                        Margin="0,4,0,0"
+                        Spacing="3"
+                        Visibility="Collapsed" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 4: Opções de Visualização 3D -->
+            <cad:CadSectionPane Title="OPÇÕES DE VISUALIZAÇÃO 3D">
+                <StackPanel Spacing="3">
+                    <cad:CadPropertyRow
+                        x:Name="LidRow"
+                        Label="Abertura tampa"
+                        LabelWidth="106"
+                        ShowBottomDivider="False">
+                        <cad:CadNumericInput
+                            x:Name="LidAngleInput"
+                            DecimalPlaces="0"
+                            Maximum="110"
+                            Minimum="0"
+                            Step="5"
+                            Unit="°"
+                            ValueChanged="OnLidAngleChanged" />
+                    </cad:CadPropertyRow>
+
+                    <Grid
+                        x:Name="LidQuickRow"
+                        Margin="0,1,0,2"
+                        ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="Lid0Btn"
+                            Grid.Column="0"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickLidAngleClick"
+                            Content="0° Fechada"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="0" />
+                        <Button
+                            x:Name="Lid45Btn"
+                            Grid.Column="1"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickLidAngleClick"
+                            Content="45°"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="45" />
+                        <Button
+                            x:Name="Lid90Btn"
+                            Grid.Column="2"
+                            Height="23"
+                            MinHeight="23"
+                            Click="OnQuickLidAngleClick"
+                            Content="90° Aberta"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="90" />
+                    </Grid>
+
+                    <CheckBox
+                        x:Name="ExplodedCheckBox"
+                        MinHeight="21"
+                        Margin="2,0,0,0"
+                        Padding="6,0,0,0"
+                        Checked="OnExplodedChanged"
+                        Content="Peças separadas (Explodir)"
+                        FontSize="11.5"
+                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                        Unchecked="OnExplodedChanged" />
+
+                    <CheckBox
+                        x:Name="DimensionsCheckBox"
+                        MinHeight="21"
+                        Margin="2,0,0,0"
+                        Padding="6,0,0,0"
+                        Checked="OnShowDimensionsChanged"
+                        Content="Exibir cotas 3D (W/D/H)"
+                        FontSize="11.5"
+                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                        Unchecked="OnShowDimensionsChanged" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,33 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Areas.ManufacturingAreaLeftPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives">
+
+    <ScrollViewer
+        Padding="0"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="0">
+
+            <!-- Seção 1: Resumo de Fabricação 1:1 -->
+            <cad:CadSectionPane Title="RESUMO DE FABRICAÇÃO 1:1">
+                <cad:CadMetricTable x:Name="ManufacturingSummaryTable" />
+            </cad:CadSectionPane>
+
+            <!-- Seção 2: Mapa de Camadas CNC (6 Layers) -->
+            <cad:CadSectionPane BadgeText="6 layers" Title="MAPA DE CAMADAS CNC (6 LAYERS)">
+                <StackPanel x:Name="LayersListPanel" Spacing="2" />
+            </cad:CadSectionPane>
+
+            <!-- Seção 3: Chapas para Usinagem -->
+            <cad:CadSectionPane
+                x:Name="SheetsListSection"
+                BadgeText="0p"
+                Title="CHAPAS PARA USINAGEM">
+                <StackPanel x:Name="SheetsListPanel" Spacing="2" />
+            </cad:CadSectionPane>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

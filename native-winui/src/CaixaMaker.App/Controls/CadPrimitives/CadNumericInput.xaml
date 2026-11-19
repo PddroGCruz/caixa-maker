@@ -1,0 +1,226 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadPrimitives.CadNumericInput"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Border
+        x:Name="OuterBorder"
+        Height="28"
+        Background="{ThemeResource CmInputBackgroundBrush}"
+        BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+        BorderThickness="1"
+        CornerRadius="{StaticResource CmControlCornerRadius}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition x:Name="ProgressRow" Height="6" />
+            </Grid.RowDefinitions>
+
+            <!-- Camada de destaque de foco -->
+            <Border
+                x:Name="FocusBorder"
+                Grid.RowSpan="2"
+                BorderBrush="{ThemeResource CmAccentPrimaryBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                IsHitTestVisible="False"
+                Visibility="Collapsed" />
+
+            <!-- Linha principal: [-] [Input Monospace] [Unidade + Scrub ⇔] [+] -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="18" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    x:Name="DecButton"
+                    Grid.Column="0"
+                    Background="Transparent"
+                    BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                    BorderThickness="0,0,1,0"
+                    PointerEntered="OnStepPointerEntered"
+                    PointerExited="OnStepPointerExited"
+                    PointerPressed="OnDecrementPressed">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="11"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="-" />
+                </Border>
+
+                <TextBox
+                    x:Name="ValueTextBox"
+                    Grid.Column="1"
+                    MinWidth="0"
+                    MinHeight="0"
+                    Margin="0"
+                    Padding="4,0,2,0"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Center"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
+                    FontFamily="{StaticResource CmMonoFontFamily}"
+                    FontSize="11.5"
+                    Foreground="{ThemeResource CmTextPrimaryBrush}"
+                    GotFocus="OnTextBoxGotFocus"
+                    IsSpellCheckEnabled="False"
+                    LostFocus="OnTextBoxLostFocus"
+                    PreviewKeyDown="OnTextBoxPreviewKeyDown"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    ScrollViewer.HorizontalScrollMode="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    TextAlignment="Right"
+                    ToolTipService.ToolTip="Digite número ou expressão matemática (ex.: 185 + 6, 300 / 2)">
+                    <TextBox.Resources>
+                        <x:Double x:Key="TextControlThemeMinHeight">0</x:Double>
+                        <Thickness x:Key="TextControlThemePadding">4,0,2,0</Thickness>
+                        <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                        <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
+                        <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
+                    </TextBox.Resources>
+                    <TextBox.Template>
+                        <ControlTemplate TargetType="TextBox">
+                            <Grid Background="Transparent">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal" />
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <ScrollViewer
+                                    x:Name="ContentElement"
+                                    Margin="0"
+                                    Padding="{TemplateBinding Padding}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    AutomationProperties.AccessibilityView="Raw"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                    HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                    IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                                    IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                                    IsTabStop="False"
+                                    IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                                    VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                    VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                    ZoomMode="Disabled" />
+                            </Grid>
+                        </ControlTemplate>
+                    </TextBox.Template>
+                </TextBox>
+
+                <!-- Alça horizontal de Value Scrubbing (Unidade + Indicador ⇔) -->
+                <Border
+                    x:Name="ScrubHandleBorder"
+                    Grid.Column="2"
+                    Padding="2,0,4,0"
+                    Background="Transparent"
+                    PointerCaptureLost="OnScrubPointerLost"
+                    PointerEntered="OnScrubPointerEntered"
+                    PointerExited="OnScrubPointerExited"
+                    PointerMoved="OnScrubPointerMoved"
+                    PointerPressed="OnScrubPointerPressed"
+                    PointerReleased="OnScrubPointerReleased"
+                    ToolTipService.ToolTip="Arraste horizontalmente para ajustar continuamente (Shift: fino · Ctrl: rápido)">
+                    <StackPanel
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="2">
+                        <TextBlock
+                            x:Name="UnitTextBlock"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource CmMonoFontFamily}"
+                            FontSize="10"
+                            Foreground="{ThemeResource CmTextSecondaryBrush}"
+                            Text="mm" />
+                        <TextBlock
+                            x:Name="ScrubGripText"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource CmUiFontFamily}"
+                            FontSize="9"
+                            Foreground="{ThemeResource CmTextSecondaryBrush}"
+                            Opacity="0.65"
+                            Text="⇔" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    x:Name="IncButton"
+                    Grid.Column="3"
+                    Background="Transparent"
+                    BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                    BorderThickness="1,0,0,0"
+                    PointerEntered="OnStepPointerEntered"
+                    PointerExited="OnStepPointerExited"
+                    PointerPressed="OnIncrementPressed">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="11"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="+" />
+                </Border>
+            </Grid>
+
+            <!-- Trilha interativa de Slider (zona de toque 6 px, barra 2.5 px e thumb 6×6 px) -->
+            <Grid
+                x:Name="ProgressTrackGrid"
+                Grid.Row="1"
+                Height="6"
+                Padding="2,0"
+                Background="Transparent"
+                PointerCaptureLost="OnProgressPointerLost"
+                PointerEntered="OnProgressPointerEntered"
+                PointerExited="OnProgressPointerExited"
+                PointerMoved="OnProgressPointerMoved"
+                PointerPressed="OnProgressPointerPressed"
+                PointerReleased="OnProgressPointerReleased"
+                SizeChanged="OnProgressSizeChanged"
+                ToolTipService.ToolTip="Clique ou arraste na trilha para deslizar o valor (Shift: ajuste fino)">
+                <Border
+                    Height="2.5"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource CmHairlineBorderBrush}"
+                    CornerRadius="1.25"
+                    IsHitTestVisible="False" />
+                <Border
+                    x:Name="ProgressFillBorder"
+                    Height="2.5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource CmAccentPrimaryBrush}"
+                    CornerRadius="1.25"
+                    IsHitTestVisible="False" />
+                <Border
+                    x:Name="SliderThumb"
+                    Width="6"
+                    Height="6"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Background="#22C55E"
+                    BorderBrush="{ThemeResource CmInputBackgroundBrush}"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    IsHitTestVisible="False" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

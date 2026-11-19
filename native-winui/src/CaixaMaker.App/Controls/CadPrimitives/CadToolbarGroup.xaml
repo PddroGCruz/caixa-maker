@@ -1,0 +1,48 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadPrimitives.CadToolbarGroup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Rectangle
+            x:Name="LeadingSeparator"
+            Grid.Column="0"
+            Width="1"
+            Height="38"
+            Margin="5,0,6,0"
+            VerticalAlignment="Center"
+            Fill="{ThemeResource CmHairlineBorderBrush}" />
+
+        <Grid Grid.Column="1" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28" />
+                <RowDefinition Height="14" />
+            </Grid.RowDefinitions>
+
+            <ContentPresenter
+                x:Name="GroupContentPresenter"
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+
+            <TextBlock
+                x:Name="GroupLabelText"
+                Grid.Row="1"
+                Margin="2,0,2,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CharacterSpacing="40"
+                FontFamily="{StaticResource CmUiFontFamily}"
+                FontSize="9.5"
+                FontWeight="SemiBold"
+                Foreground="{ThemeResource CmTextMutedBrush}"
+                IsTextScaleFactorEnabled="False"
+                Visibility="Collapsed" />
+        </Grid>
+    </Grid>
+</UserControl>

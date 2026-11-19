@@ -1,0 +1,882 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Areas.PersonalizationAreaRightPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer
+            Grid.Row="0"
+            Padding="0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="0">
+
+            <!-- Estado vazio: Resumo técnico da superfície ativa -->
+            <StackPanel x:Name="EmptyStateContainer" Spacing="0">
+                <cad:CadSectionPane
+                    x:Name="ActiveSurfacePane"
+                    BadgeText="Frente"
+                    Title="SUPERFÍCIE ATIVA">
+                    <StackPanel Spacing="6">
+                        <cad:CadMetricTable x:Name="ActiveSurfaceSummaryTable" />
+
+                        <cad:CadStatusBadge
+                            x:Name="SurfaceSatStatusBadge"
+                            HorizontalAlignment="Left"
+                            Kind="Valid"
+                            Text="SUPERFÍCIE PRONTA" />
+
+                        <TextBlock
+                            FontSize="11"
+                            Foreground="{ThemeResource CmTextSecondaryBrush}"
+                            Text="Selecione um elemento no editor 2D ou Outliner para editar posição, dimensões em mm, rotação, âncora e camada CNC."
+                            TextWrapping="Wrap" />
+
+                        <Grid Margin="0,2,0,0" ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Grid.Column="0"
+                                Click="OnQuickInsertTextClick"
+                                Content="+ Texto na Face"
+                                Style="{StaticResource PrimaryAccentButtonStyle}" />
+                            <Button
+                                Grid.Column="1"
+                                Click="OnRevalidateClick"
+                                Content="↻ Validar SAT"
+                                Style="{StaticResource CadActionButtonStyle}" />
+                        </Grid>
+                    </StackPanel>
+                </cad:CadSectionPane>
+            </StackPanel>
+
+            <!-- Estado selecionado: 4 Property Grids de inspeção CNC -->
+            <StackPanel
+                x:Name="InspectorSectionsContainer"
+                Spacing="0"
+                Visibility="Collapsed">
+
+                <!-- Indicador discreto in-place de seleção múltipla ordenada -->
+                <Border
+                    x:Name="MultiSelectionBanner"
+                    Margin="8,8,8,2"
+                    Padding="8,5"
+                    Background="{ThemeResource CmAccentSelectionBrush}"
+                    BorderBrush="{ThemeResource CmAccentPrimaryBrush}"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    Visibility="Collapsed">
+                    <TextBlock
+                        x:Name="MultiSelectionBannerText"
+                        FontSize="11"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmAccentHighlightBrush}"
+                        Text="2 elementos selecionados (1º item = âncora)"
+                        TextWrapping="Wrap" />
+                </Border>
+
+                <!-- Seção 1: Elemento Selecionado -->
+                <cad:CadSectionPane
+                    x:Name="SelectedElementSection"
+                    BadgeText="TEXTO"
+                    Title="ELEMENTO SELECIONADO">
+                    <StackPanel Spacing="4">
+                        <cad:CadPropertyRow
+                            Label="Nome"
+                            LabelWidth="86"
+                            ShowBottomDivider="False">
+                            <TextBox
+                                x:Name="SelectedNameBox"
+                                LostFocus="OnSelectedNameLostFocus"
+                                PlaceholderText="Identificador do elemento"
+                                Style="{StaticResource CadTextBoxStyle}"
+                                TextChanged="OnSelectedNameChanged" />
+                        </cad:CadPropertyRow>
+
+                        <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="ToggleVisibleBtn"
+                                Grid.Column="0"
+                                Click="OnToggleVisibleClick"
+                                Content="Visível"
+                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                            <Button
+                                x:Name="ToggleLockBtn"
+                                Grid.Column="1"
+                                Click="OnToggleLockClick"
+                                Content="Travar"
+                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                            <Button
+                                Grid.Column="2"
+                                Click="OnDuplicateClick"
+                                Content="Duplicar"
+                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                            <Button
+                                Grid.Column="3"
+                                Click="OnDeleteClick"
+                                Content="Excluir"
+                                Foreground="{ThemeResource CmStatusDangerBrush}"
+                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                        </Grid>
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção 2: Transformação e Geometria (mm) -->
+                <cad:CadSectionPane BadgeText="mm" Title="TRANSFORMAÇÃO E GEOMETRIA (MM)">
+                    <StackPanel Spacing="3">
+                        <cad:CadPropertyRow Label="Superfície" LabelWidth="86">
+                            <ComboBox
+                                x:Name="MoveSurfaceCombo"
+                                DisplayMemberPath="Label"
+                                SelectionChanged="OnMoveSurfaceChanged"
+                                Style="{StaticResource CadComboBoxStyle}" />
+                        </cad:CadPropertyRow>
+
+                        <Grid Margin="0,2,0,3" ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Grid.Column="0"
+                                Click="OnQuickAlignClick"
+                                Content="Centro"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Center" />
+                            <Button
+                                Grid.Column="1"
+                                Click="OnQuickAlignClick"
+                                Content="Esq."
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Left" />
+                            <Button
+                                Grid.Column="2"
+                                Click="OnQuickAlignClick"
+                                Content="Dir."
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Right" />
+                            <Button
+                                Grid.Column="3"
+                                Click="OnQuickAlignClick"
+                                Content="Topo"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Top" />
+                            <Button
+                                Grid.Column="4"
+                                Click="OnQuickAlignClick"
+                                Content="Base"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Bottom" />
+                        </Grid>
+
+                        <cad:CadPropertyRow Label="Posição X" LabelWidth="86">
+                            <cad:CadNumericInput
+                                x:Name="PosXInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="-500"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnPosXChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow Label="Posição Y" LabelWidth="86">
+                            <cad:CadNumericInput
+                                x:Name="PosYInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="-500"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnPosYChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow Label="Largura (L)" LabelWidth="86">
+                            <cad:CadNumericInput
+                                x:Name="WidthInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnWidthChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow Label="Altura (A)" LabelWidth="86">
+                            <cad:CadNumericInput
+                                x:Name="HeightInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnHeightChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            Label="Rotação"
+                            LabelWidth="86"
+                            ShowBottomDivider="False">
+                            <Grid ColumnSpacing="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="46" />
+                                </Grid.ColumnDefinitions>
+                                <cad:CadNumericInput
+                                    x:Name="RotationInput"
+                                    Grid.Column="0"
+                                    DecimalPlaces="1"
+                                    Maximum="360"
+                                    Minimum="-360"
+                                    Step="15"
+                                    Unit="°"
+                                    ValueChanged="OnRotationChanged" />
+                                <Button
+                                    Grid.Column="1"
+                                    Click="OnRotate90Click"
+                                    Content="+90°"
+                                    Style="{StaticResource CadSegmentedButtonStyle}" />
+                            </Grid>
+                        </cad:CadPropertyRow>
+
+                        <CheckBox
+                            x:Name="PreserveAspectCheckBox"
+                            MinHeight="24"
+                            Margin="2,0,0,0"
+                            Padding="6,0,0,0"
+                            Checked="OnPreserveAspectChanged"
+                            Content="Travar proporção ao redimensionar"
+                            FontSize="11.5"
+                            Foreground="{ThemeResource CmTextPrimaryBrush}"
+                            Unchecked="OnPreserveAspectChanged" />
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção Contextual: Parâmetros da Forma (mm) -->
+                <cad:CadSectionPane
+                    x:Name="ShapeParamsSection"
+                    BadgeText="1:1"
+                    Title="Parâmetros da Forma (mm)"
+                    Visibility="Collapsed">
+                    <StackPanel Spacing="3">
+                        <cad:CadPropertyRow Label="Modo de Operação" LabelWidth="112">
+                            <Grid ColumnSpacing="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button
+                                    x:Name="ShapeOpCutBtn"
+                                    Grid.Column="0"
+                                    Click="OnShapeOperationModeClick"
+                                    Content="Corte"
+                                    Style="{StaticResource CadSegmentedButtonStyle}"
+                                    Tag="Cut" />
+                                <Button
+                                    x:Name="ShapeOpEngraveBtn"
+                                    Grid.Column="1"
+                                    Click="OnShapeOperationModeClick"
+                                    Content="Gravação"
+                                    Style="{StaticResource CadSegmentedButtonStyle}"
+                                    Tag="Engrave" />
+                                <Button
+                                    x:Name="ShapeOpBothBtn"
+                                    Grid.Column="2"
+                                    Click="OnShapeOperationModeClick"
+                                    Content="Ambos"
+                                    Style="{StaticResource CadSegmentedButtonStyle}"
+                                    Tag="Both" />
+                            </Grid>
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeRectWidthRow"
+                            Label="Largura (mm)"
+                            LabelWidth="112">
+                            <cad:CadNumericInput
+                                x:Name="ShapeRectWidthInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnShapeWidthChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeRectHeightRow"
+                            Label="Altura (mm)"
+                            LabelWidth="112">
+                            <cad:CadNumericInput
+                                x:Name="ShapeRectHeightInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnShapeHeightChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeCornerRadiusRow"
+                            Label="Raio de Canto (mm)"
+                            LabelWidth="112"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="ShapeCornerRadiusInput"
+                                DecimalPlaces="2"
+                                Maximum="1000"
+                                Minimum="0"
+                                Step="0.5"
+                                Unit="mm"
+                                ValueChanged="OnShapeCornerRadiusChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeDiameterRow"
+                            Label="Diâmetro (mm)"
+                            LabelWidth="112">
+                            <cad:CadNumericInput
+                                x:Name="ShapeDiameterInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="0.5"
+                                Unit="mm"
+                                ValueChanged="OnShapeDiameterChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeSlotLengthRow"
+                            Label="Comprimento L (mm)"
+                            LabelWidth="112">
+                            <cad:CadNumericInput
+                                x:Name="ShapeSlotLengthInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnShapeWidthChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeSlotWidthRow"
+                            Label="Largura W (mm)"
+                            LabelWidth="112"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="ShapeSlotWidthInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="0.5"
+                                Unit="mm"
+                                ValueChanged="OnShapeHeightChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapePolygonSidesRow"
+                            Label="Nº de Lados (3–24)"
+                            LabelWidth="112"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="ShapePolygonSidesInput"
+                                DecimalPlaces="0"
+                                Maximum="24"
+                                Minimum="3"
+                                Step="1"
+                                Unit="lados"
+                                ValueChanged="OnShapeSidesChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            x:Name="ShapeCrosshairSizeRow"
+                            Label="Tamanho do Alvo (mm)"
+                            LabelWidth="112"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="ShapeCrosshairSizeInput"
+                                DecimalPlaces="2"
+                                Maximum="2000"
+                                Minimum="0.5"
+                                Step="1"
+                                Unit="mm"
+                                ValueChanged="OnShapeDiameterChanged" />
+                        </cad:CadPropertyRow>
+
+                        <CheckBox
+                            x:Name="ShapeFillHatchCheckBox"
+                            MinHeight="22"
+                            Margin="2,2,0,0"
+                            Padding="6,0,0,0"
+                            Checked="OnShapeFillHatchToggled"
+                            Content="Preenchimento Hachura 45° (ENGRAVE_FILL)"
+                            FontSize="11.5"
+                            Unchecked="OnShapeFillHatchToggled" />
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção 3: Âncora e Camada CAM -->
+                <cad:CadSectionPane Title="ANCORAGEM E CAMADA CAM">
+                    <StackPanel Spacing="3">
+                        <cad:CadPropertyRow Label="Âncora resize" LabelWidth="94">
+                            <ComboBox
+                                x:Name="AnchorCombo"
+                                DisplayMemberPath="Label"
+                                SelectionChanged="OnAnchorChanged"
+                                Style="{StaticResource CadComboBoxStyle}" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            Label="Camada CNC"
+                            LabelWidth="94"
+                            ShowBottomDivider="False">
+                            <ComboBox
+                                x:Name="OperationCombo"
+                                DisplayMemberPath="Label"
+                                SelectionChanged="OnOperationChanged"
+                                Style="{StaticResource CadComboBoxStyle}" />
+                        </cad:CadPropertyRow>
+
+                        <!-- Subseção contextual: Texto -->
+                        <StackPanel
+                            x:Name="TextPropsPanel"
+                            Margin="0,3,0,0"
+                            Spacing="3"
+                            Visibility="Collapsed">
+                            <cad:CadPropertyRow Label="Texto CNC" LabelWidth="94">
+                                <TextBox
+                                    x:Name="SelectedTextBox"
+                                    LostFocus="OnSelectedTextLostFocus"
+                                    PlaceholderText="Texto da gravação"
+                                    PreviewKeyDown="OnSelectedTextPreviewKeyDown"
+                                    Style="{StaticResource CadTextBoxStyle}"
+                                    TextChanged="OnSelectedTextChanged" />
+                            </cad:CadPropertyRow>
+
+                            <cad:CadPropertyRow Label="Fonte" LabelWidth="94">
+                                <ComboBox
+                                    x:Name="SelectedFontCombo"
+                                    SelectionChanged="OnSelectedFontChanged"
+                                    Style="{StaticResource CadComboBoxStyle}" />
+                            </cad:CadPropertyRow>
+
+                            <cad:CadPropertyRow Label="Tam. fonte" LabelWidth="94">
+                                <Grid ColumnSpacing="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="26" />
+                                        <ColumnDefinition Width="26" />
+                                    </Grid.ColumnDefinitions>
+                                    <cad:CadNumericInput
+                                        x:Name="SelectedFontSizeInput"
+                                        Grid.Column="0"
+                                        DecimalPlaces="1"
+                                        Maximum="200"
+                                        Minimum="2"
+                                        Step="1"
+                                        Unit="mm"
+                                        ValueChanged="OnSelectedFontSizeChanged" />
+                                    <Button
+                                        x:Name="BoldToggleBtn"
+                                        Grid.Column="1"
+                                        Click="OnBoldToggleClick"
+                                        Content="B"
+                                        FontWeight="Bold"
+                                        Style="{StaticResource CadSegmentedButtonStyle}" />
+                                    <Button
+                                        x:Name="ItalicToggleBtn"
+                                        Grid.Column="2"
+                                        Click="OnItalicToggleClick"
+                                        Content="I"
+                                        FontStyle="Italic"
+                                        Style="{StaticResource CadSegmentedButtonStyle}" />
+                                </Grid>
+                            </cad:CadPropertyRow>
+
+                            <cad:CadPropertyRow Label="Modo texto" LabelWidth="94">
+                                <ComboBox
+                                    x:Name="SelectedTextRenderModeCombo"
+                                    DisplayMemberPath="Label"
+                                    SelectionChanged="OnSelectedTextRenderModeChanged"
+                                    Style="{StaticResource CadComboBoxStyle}" />
+                            </cad:CadPropertyRow>
+
+                            <cad:CadPropertyRow
+                                x:Name="SelectedHatchRow"
+                                Label="Passo hach."
+                                LabelWidth="94"
+                                ShowBottomDivider="False">
+                                <cad:CadNumericInput
+                                    x:Name="SelectedHatchInput"
+                                    DecimalPlaces="2"
+                                    Maximum="5"
+                                    Minimum="0.05"
+                                    Step="0.05"
+                                    Unit="mm"
+                                    ValueChanged="OnSelectedHatchSpacingChanged" />
+                            </cad:CadPropertyRow>
+                        </StackPanel>
+
+                        <!-- Subseção contextual: Raster -->
+                        <StackPanel
+                            x:Name="RasterPropsPanel"
+                            Margin="0,3,0,0"
+                            Spacing="3"
+                            Visibility="Collapsed">
+                            <cad:CadPropertyRow
+                                Label="Limiar B/P"
+                                LabelWidth="94"
+                                ShowBottomDivider="False">
+                                <cad:CadNumericInput
+                                    x:Name="RasterThresholdInput"
+                                    DecimalPlaces="0"
+                                    Maximum="255"
+                                    Minimum="1"
+                                    Step="5"
+                                    Unit="px"
+                                    ValueChanged="OnRasterThresholdChanged" />
+                            </cad:CadPropertyRow>
+
+                            <CheckBox
+                                x:Name="RasterInvertCheckBox"
+                                MinHeight="22"
+                                Padding="6,0,0,0"
+                                Checked="OnRasterOptionToggled"
+                                Content="Inverter tons"
+                                FontSize="11.5"
+                                Unchecked="OnRasterOptionToggled" />
+                            <CheckBox
+                                x:Name="RasterMonochromeCheckBox"
+                                MinHeight="22"
+                                Padding="6,0,0,0"
+                                Checked="OnRasterOptionToggled"
+                                Content="Preto e Branco 1-bit"
+                                FontSize="11.5"
+                                Unchecked="OnRasterOptionToggled" />
+                            <CheckBox
+                                x:Name="RasterDitheringCheckBox"
+                                MinHeight="22"
+                                Padding="6,0,0,0"
+                                Checked="OnRasterOptionToggled"
+                                Content="Dithering Floyd-Steinberg"
+                                FontSize="11.5"
+                                Unchecked="OnRasterOptionToggled" />
+                            <CheckBox
+                                x:Name="RasterVectorizeCheckBox"
+                                MinHeight="22"
+                                Padding="6,0,0,0"
+                                Checked="OnRasterOptionToggled"
+                                Content="Vetorizar contornos (CNC)"
+                                FontSize="11.5"
+                                Unchecked="OnRasterOptionToggled" />
+                        </StackPanel>
+
+                        <!-- Indicador discreto de sincronização em tempo real + reprocessamento opcional -->
+                        <Grid
+                            x:Name="AutoCamStatusStrip"
+                            Margin="0,6,0,0"
+                            Padding="0,6,0,0"
+                            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                            BorderThickness="0,1,0,0"
+                            ColumnSpacing="6"
+                            Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel
+                                Grid.Column="0"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <Ellipse
+                                    Width="6"
+                                    Height="6"
+                                    VerticalAlignment="Center"
+                                    Fill="{ThemeResource CmAccentHighlightBrush}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="10"
+                                    Foreground="{ThemeResource CmTextMutedBrush}"
+                                    Text="Auto-CAM ativo (tempo real)"
+                                    TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <Button
+                                x:Name="ForceReprocessBtn"
+                                Grid.Column="1"
+                                MinHeight="22"
+                                Padding="7,2"
+                                Click="OnApplyChangesClick"
+                                Content="↻ Reprocessar"
+                                FontSize="10.5"
+                                Style="{StaticResource CompactToolbarButtonStyle}"
+                                ToolTipService.ToolTip="Forçar reprocessamento vetorial/raster completo da seleção" />
+                        </Grid>
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção 3A: Alinhar & Distribuir CAD (Estilo Inkscape) -->
+                <cad:CadSectionPane
+                    x:Name="AlignAndDistributeSection"
+                    BadgeText="CAD"
+                    Title="Alinhar &amp; Distribuir">
+                    <StackPanel Spacing="4">
+                        <cad:CadPropertyRow
+                            Label="Relativo a:"
+                            LabelWidth="78"
+                            ShowBottomDivider="False">
+                            <ComboBox
+                                x:Name="AlignmentReferenceCombo"
+                                DisplayMemberPath="Label"
+                                SelectionChanged="OnAlignmentReferenceChanged"
+                                Style="{StaticResource CadComboBoxStyle}" />
+                        </cad:CadPropertyRow>
+
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="AlignLeftBtn"
+                                Grid.Column="0"
+                                Click="OnAlignActionClick"
+                                Content="⇤ Esq."
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignLeft"
+                                ToolTipService.ToolTip="Alinhar bordas à esquerda da referência" />
+                            <Button
+                                x:Name="AlignCenterXBtn"
+                                Grid.Column="1"
+                                Click="OnAlignActionClick"
+                                Content="↔ Centro H"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignCenterX"
+                                ToolTipService.ToolTip="Centralizar horizontalmente em relação à referência" />
+                            <Button
+                                x:Name="AlignRightBtn"
+                                Grid.Column="2"
+                                Click="OnAlignActionClick"
+                                Content="Dir. ⇥"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignRight"
+                                ToolTipService.ToolTip="Alinhar bordas à direita da referência" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="AlignTopBtn"
+                                Grid.Column="0"
+                                Click="OnAlignActionClick"
+                                Content="⇡ Topo"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignTop"
+                                ToolTipService.ToolTip="Alinhar bordas ao topo da referência" />
+                            <Button
+                                x:Name="AlignCenterYBtn"
+                                Grid.Column="1"
+                                Click="OnAlignActionClick"
+                                Content="↕ Centro V"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignCenterY"
+                                ToolTipService.ToolTip="Centralizar verticalmente em relação à referência" />
+                            <Button
+                                x:Name="AlignBottomBtn"
+                                Grid.Column="2"
+                                Click="OnAlignActionClick"
+                                Content="Base ⇣"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="AlignBottom"
+                                ToolTipService.ToolTip="Alinhar bordas à base da referência" />
+                        </Grid>
+
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="DistributeHorizontalBtn"
+                                Grid.Column="0"
+                                Click="OnAlignActionClick"
+                                Content="⇆ Distribuir H"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="DistributeHorizontal"
+                                ToolTipService.ToolTip="Distribuir centros horizontalmente com espaçamento igual (mín. 3 elementos)" />
+                            <Button
+                                x:Name="DistributeVerticalBtn"
+                                Grid.Column="1"
+                                Click="OnAlignActionClick"
+                                Content="⇅ Distribuir V"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="DistributeVertical"
+                                ToolTipService.ToolTip="Distribuir centros verticalmente com espaçamento igual (mín. 3 elementos)" />
+                        </Grid>
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção 3B: Repetição & Simetria CAD -->
+                <cad:CadSectionPane
+                    x:Name="CadRepetitionSection"
+                    BadgeText="CAD"
+                    Title="Repetição &amp; Simetria CAD">
+                    <StackPanel Spacing="5">
+                        <Button
+                            x:Name="MirrorFourCornersBtn"
+                            HorizontalAlignment="Stretch"
+                            Click="OnMirrorFourCornersClick"
+                            Content="⊞ Espelhar nos 4 Cantos"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            ToolTipService.ToolTip="Espelha o elemento selecionado nas até 4 posições simétricas da chapa" />
+
+                        <cad:CadPropertyRow Label="Qtd Total" LabelWidth="94">
+                            <cad:CadNumericInput
+                                x:Name="ArrayCountInput"
+                                DecimalPlaces="0"
+                                Maximum="20"
+                                Minimum="2"
+                                Step="1"
+                                Unit="un"
+                                ValueChanged="OnArrayCountChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow Label="Passo X (mm)" LabelWidth="94">
+                            <cad:CadNumericInput
+                                x:Name="ArrayStepXInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="-2000"
+                                Step="5"
+                                Unit="mm"
+                                ValueChanged="OnArrayStepXChanged" />
+                        </cad:CadPropertyRow>
+
+                        <cad:CadPropertyRow
+                            Label="Passo Y (mm)"
+                            LabelWidth="94"
+                            ShowBottomDivider="False">
+                            <cad:CadNumericInput
+                                x:Name="ArrayStepYInput"
+                                DecimalPlaces="1"
+                                Maximum="2000"
+                                Minimum="-2000"
+                                Step="5"
+                                Unit="mm"
+                                ValueChanged="OnArrayStepYChanged" />
+                        </cad:CadPropertyRow>
+
+                        <Button
+                            x:Name="CreateLinearArrayBtn"
+                            HorizontalAlignment="Stretch"
+                            Click="OnCreateLinearArrayClick"
+                            Content="▤ Gerar Grade Linear"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            ToolTipService.ToolTip="Cria cópias em série linear com os passos X/Y configurados" />
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+                <!-- Seção 4: Diagnóstico SAT do Elemento -->
+                <cad:CadSectionPane Title="DIAGNÓSTICO SAT DO ELEMENTO">
+                    <StackPanel Spacing="6">
+                        <cad:CadStatusBadge
+                            x:Name="ElementSatBadge"
+                            HorizontalAlignment="Left"
+                            Kind="Valid"
+                            Text="DENTRO DA ÁREA SEGURA" />
+
+                        <cad:CadMetricTable x:Name="ElementSatMetricsTable" />
+
+                        <StackPanel
+                            x:Name="ElementValidationList"
+                            Spacing="3"
+                            Visibility="Collapsed" />
+                    </StackPanel>
+                </cad:CadSectionPane>
+
+            </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Rodapé fixo do fluxo guiado (Etapa 2 -> Etapa 1 / Etapa 3 + alerta SAT não bloqueante) -->
+        <Border
+            Grid.Row="1"
+            Padding="8,8"
+            Background="{ThemeResource CmShellBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,1,0,0">
+            <StackPanel Spacing="6">
+                <Border
+                    x:Name="FooterSatWarningBanner"
+                    Padding="6,4"
+                    Background="#1AF59E0B"
+                    BorderBrush="{ThemeResource CmStatusWarningBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CmControlCornerRadius}"
+                    Visibility="Collapsed">
+                    <TextBlock
+                        x:Name="FooterSatWarningText"
+                        FontSize="10.5"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmStatusWarningBrush}"
+                        Text="⚠ Há alertas SAT pendentes — revise antes do corte"
+                        TextWrapping="Wrap" />
+                </Border>
+
+                <Grid ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        x:Name="BackToModelingBtn"
+                        Grid.Column="0"
+                        Height="28"
+                        MinHeight="28"
+                        Padding="10,0"
+                        Click="OnBackToModelingClick"
+                        Content="← Modelagem"
+                        Style="{StaticResource CadSegmentedButtonStyle}"
+                        ToolTipService.ToolTip="Retornar para Etapa 1: Modelagem Paramétrica (Alt+1)" />
+
+                    <Button
+                        x:Name="AdvanceToManufacturingBtn"
+                        Grid.Column="1"
+                        Height="28"
+                        HorizontalAlignment="Stretch"
+                        Click="OnAdvanceToManufacturingClick"
+                        Content="Avançar para Fabricação →"
+                        Style="{StaticResource PrimaryAccentButtonStyle}"
+                        ToolTipService.ToolTip="Prosseguir para Etapa 3: Fabricação e Exportação CAM (Alt+3)" />
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

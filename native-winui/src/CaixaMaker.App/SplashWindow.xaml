@@ -1,0 +1,11 @@
+<Window
+    x:Class="CaixaMaker.App.SplashWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CaixaMaker.App.Controls"
+    Title="Caixa Maker">
+
+    <Grid Background="#0B0E14">
+        <controls:SplashScreenControl x:Name="SplashControl" />
+    </Grid>
+</Window>

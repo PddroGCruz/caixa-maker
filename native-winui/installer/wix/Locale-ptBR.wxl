@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="pt-br" Codepage="1252" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="ProductLanguage">1046</String>
+  <String Id="DowngradeErrorMessage">Uma versão mais recente do [ProductName] já está instalada.</String>
+  <String Id="LaunchApp">Executar [ProductName]</String>
+  <String Id="FeatureMainTitle">[ProductName]</String>
+  <String Id="FeatureMainDescription">Aplicação nativa Windows (.NET 8 + WinUI 3 x64) do Caixa Maker para modelagem paramétrica e preparação CNC em MDF.</String>
+  <String Id="WixUIOverwriteFooter"> </String>
+</WixLocalization>

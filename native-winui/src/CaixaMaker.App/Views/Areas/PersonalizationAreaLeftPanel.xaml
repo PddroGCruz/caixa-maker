@@ -1,0 +1,311 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Areas.PersonalizationAreaLeftPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives">
+
+    <ScrollViewer
+        Padding="0"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="0">
+
+            <!-- Seção 1: Seletor de Superfície (Grade 3x2) -->
+            <cad:CadSectionPane
+                x:Name="SurfaceSelectorSection"
+                BadgeText="Frente"
+                Title="SELETOR DE SUPERFÍCIE (FACE ATIVA)">
+                <StackPanel Spacing="4">
+                    <Grid
+                        x:Name="SurfacesGrid"
+                        ColumnSpacing="4"
+                        RowSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                    <TextBlock
+                        x:Name="ActiveSurfaceDimensionsText"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="Área segura CNC atualizada automaticamente."
+                        TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 2: Inserir Elemento CNC na Face -->
+            <cad:CadSectionPane Title="INSERIR ELEMENTO CNC NA FACE">
+                <StackPanel Spacing="3">
+                    <cad:CadPropertyRow Label="Texto" LabelWidth="84">
+                        <TextBox
+                            x:Name="DraftTextBox"
+                            PlaceholderText="Texto para gravação CNC..."
+                            Style="{StaticResource CadTextBoxStyle}"
+                            TextChanged="OnDraftTextChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow Label="Fonte" LabelWidth="84">
+                        <ComboBox
+                            x:Name="DraftFontCombo"
+                            SelectionChanged="OnDraftFontChanged"
+                            Style="{StaticResource CadComboBoxStyle}" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow Label="Tamanho" LabelWidth="84">
+                        <cad:CadNumericInput
+                            x:Name="DraftSizeInput"
+                            DecimalPlaces="1"
+                            Maximum="200"
+                            Minimum="2"
+                            Step="1"
+                            Unit="mm"
+                            ValueChanged="OnDraftSizeChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow
+                        Label="Modo texto"
+                        LabelWidth="84"
+                        ShowBottomDivider="False">
+                        <ComboBox
+                            x:Name="DraftRenderModeCombo"
+                            DisplayMemberPath="Label"
+                            SelectionChanged="OnDraftRenderModeChanged"
+                            Style="{StaticResource CadComboBoxStyle}" />
+                    </cad:CadPropertyRow>
+
+                    <StackPanel Margin="0,5,0,0" Spacing="4">
+                        <Button
+                            Height="28"
+                            HorizontalAlignment="Stretch"
+                            Click="OnAddTextClick"
+                            Content="+ Inserir Texto CNC na Face"
+                            Style="{StaticResource PrimaryAccentButtonStyle}" />
+
+                        <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Grid.Column="0"
+                                Click="OnImportSvgClick"
+                                Content="+ Importar SVG"
+                                Style="{StaticResource CadActionButtonStyle}" />
+                            <Button
+                                Grid.Column="1"
+                                Click="OnImportRasterClick"
+                                Content="+ Imagem Raster"
+                                Style="{StaticResource CadActionButtonStyle}" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 2B: Formas Geométricas Paramétricas (1:1 mm) + Modo Desenho 2D -->
+            <cad:CadSectionPane
+                x:Name="GeometricShapesSection"
+                BadgeText="1:1"
+                Title="Formas Geométricas (1:1 mm)">
+                <StackPanel Spacing="6">
+                    <TextBlock
+                        FontSize="10"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="Ferramenta no Editor 2D (click-and-drag):" />
+
+                    <Grid ColumnSpacing="3" RowSpacing="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Button
+                            x:Name="LeftToolSelectBtn"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="⌖ Selecionar"
+                            FontSize="10.5"
+                            Style="{StaticResource PrimaryAccentButtonStyle}"
+                            Tag="Select"
+                            ToolTipService.ToolTip="Modo Seleção / Mover (V)" />
+
+                        <Button
+                            x:Name="LeftToolDrawRectBtn"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="▭ Des. Ret."
+                            FontSize="10.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="DrawRectangle"
+                            ToolTipService.ToolTip="Desenhar Retângulo por arraste no Editor 2D (R)" />
+
+                        <Button
+                            x:Name="LeftToolDrawCircleBtn"
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="◯ Des. Círc."
+                            FontSize="10.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="DrawCircle"
+                            ToolTipService.ToolTip="Desenhar Círculo / Furo por arraste no Editor 2D (C)" />
+
+                        <Button
+                            x:Name="LeftToolDrawSlotBtn"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="⬭ Des. Slot"
+                            FontSize="10.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="DrawSlot"
+                            ToolTipService.ToolTip="Desenhar Oblongo / Slot por arraste no Editor 2D (S)" />
+
+                        <Button
+                            x:Name="LeftToolDrawPolyBtn"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="⬡ Des. Políg."
+                            FontSize="10.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="DrawPolygon"
+                            ToolTipService.ToolTip="Desenhar Polígono Regular por arraste no Editor 2D (P)" />
+
+                        <Button
+                            x:Name="LeftToolDrawCrossBtn"
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Click="OnSelectDrawToolClick"
+                            Content="⊕ Des. Cruz"
+                            FontSize="10.5"
+                            Style="{StaticResource CadSegmentedButtonStyle}"
+                            Tag="DrawCrosshair"
+                            ToolTipService.ToolTip="Desenhar Cruz de Centro por arraste no Editor 2D (X)" />
+                    </Grid>
+
+                    <TextBlock
+                        FontSize="10"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="Inserir forma rápida no centro da face:" />
+
+                    <Grid ColumnSpacing="4" RowSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Button
+                            x:Name="AddRectangleShapeBtn"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Click="OnAddShapeClick"
+                            Content="▭ Retângulo"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            Tag="Rectangle"
+                            ToolTipService.ToolTip="Recorte retangular / arredondado (1:1 mm)" />
+
+                        <Button
+                            x:Name="AddCircleShapeBtn"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Click="OnAddShapeClick"
+                            Content="◯ Círculo / Furo"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            Tag="Circle"
+                            ToolTipService.ToolTip="Furo calibrado por diâmetro (1:1 mm)" />
+
+                        <Button
+                            x:Name="AddSlotShapeBtn"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            Click="OnAddShapeClick"
+                            Content="⬭ Oblongo / Slot"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            Tag="Slot"
+                            ToolTipService.ToolTip="Rasgo para conectores/ajuste (1:1 mm)" />
+
+                        <Button
+                            x:Name="AddPolygonShapeBtn"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Click="OnAddShapeClick"
+                            Content="⬡ Polígono"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            Tag="Polygon"
+                            ToolTipService.ToolTip="Sextavado / N-lados para porcas M3/M4 (1:1 mm)" />
+                    </Grid>
+
+                    <Button
+                        x:Name="AddCrosshairShapeBtn"
+                        HorizontalAlignment="Stretch"
+                        Click="OnAddShapeClick"
+                        Content="⊕ Cruz de Centro"
+                        Style="{StaticResource CadActionButtonStyle}"
+                        Tag="Crosshair"
+                        ToolTipService.ToolTip="Marcação de furação central (1:1 mm)" />
+                </StackPanel>
+            </cad:CadSectionPane>
+
+            <!-- Seção 3: Outliner de Elementos na Face -->
+            <cad:CadSectionPane
+                x:Name="ElementsOutlinerSection"
+                BadgeText="0"
+                Title="ELEMENTOS NA FACE">
+                <StackPanel Spacing="5">
+                    <StackPanel x:Name="ElementsOutlinerList" Spacing="2" />
+
+                    <Grid Margin="0,2,0,0" ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="PasteBtn"
+                            Grid.Column="0"
+                            Click="OnPasteClick"
+                            Content="Colar elemento"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                        <Button
+                            x:Name="ClearAllBtn"
+                            Grid.Column="1"
+                            Click="OnClearAllClick"
+                            Content="Limpar tudo"
+                            Foreground="{ThemeResource CmStatusDangerBrush}"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                    </Grid>
+                </StackPanel>
+            </cad:CadSectionPane>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

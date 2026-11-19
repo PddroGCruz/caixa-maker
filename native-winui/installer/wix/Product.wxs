@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?ifndef Version ?>
+    <?define Version = "2.3.0" ?>
+  <?endif?>
+  <?ifndef PayloadDir ?>
+    <?define PayloadDir = "..\..\artifacts\publish\win-x64" ?>
+  <?endif?>
+  <?ifndef IconPath ?>
+    <?define IconPath = "..\..\src\CaixaMaker.App\Assets\icon.ico" ?>
+  <?endif?>
+
+  <Product Id="*"
+           Name="Caixa Maker"
+           Language="1046"
+           Codepage="1252"
+           Version="$(var.Version)"
+           Manufacturer="Laboratório IFMaker do Juruá — IFAC"
+           UpgradeCode="18839699-a044-5ba7-9322-34800fbe7ab1">
+
+    <Package InstallerVersion="405"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Platform="x64"
+             Languages="1046"
+             SummaryCodepage="1252"
+             Description="Instalador Windows nativo (WinUI 3 x64) do Caixa Maker"
+             Comments="Caixa Maker v$(var.Version) — Laboratório IFMaker do Juruá / IFAC • Desenvolvido por Pedro G. Cruz (PddroGCruz • ggcostcr@gmail.com)" />
+
+    <MajorUpgrade Schedule="afterInstallInitialize"
+                  DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+
+    <Media Id="1" Cabinet="caixamaker.cab" EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="ProductIcon" SourceFile="$(var.IconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+    <Property Id="ApplicationFolderName" Value="Caixa Maker" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <Property Id="WixShellExecTarget" Value="[#MainExeFile]" />
+
+    <CustomAction Id="LaunchApplication"
+                  BinaryKey="WixCA"
+                  DllEntry="WixShellExec"
+                  Impersonate="yes" />
+
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <!-- Pula a tela de licença padrão da WixUI, avançando direto da boas-vindas para escolha de diretório -->
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication">
+        WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed
+      </Publish>
+    </UI>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="Caixa Maker" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Caixa Maker" />
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="MainExecutableComponent" Guid="*" Win64="yes">
+        <File Id="MainExeFile" Source="$(var.PayloadDir)\CaixaMaker.exe" KeyPath="yes" />
+        <ProgId Id="CaixaMaker.Project" Description="Projeto Caixa Maker (.cmaker)" Icon="MainExeFile" IconIndex="0">
+          <Extension Id="cmaker" ContentType="application/x-caixamaker-project">
+            <Verb Id="open" Command="Abrir no Caixa Maker" TargetFile="MainExeFile" Argument="&quot;%1&quot;" />
+          </Extension>
+        </ProgId>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcutsComponent" Guid="*">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="Caixa Maker"
+                  Description="Modelagem Paramétrica e Preparação CNC para MDF"
+                  Target="[INSTALLDIR]CaixaMaker.exe"
+                  WorkingDirectory="INSTALLDIR"
+                  Icon="ProductIcon" />
+        <Shortcut Id="ApplicationDesktopShortcut"
+                  Directory="DesktopFolder"
+                  Name="Caixa Maker"
+                  Description="Modelagem Paramétrica e Preparação CNC para MDF"
+                  Target="[INSTALLDIR]CaixaMaker.exe"
+                  WorkingDirectory="INSTALLDIR"
+                  Icon="ProductIcon" />
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\IFMaker\CaixaMaker"
+                       Name="ShortcutsInstalled"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature"
+             Title="!(loc.FeatureMainTitle)"
+             Description="!(loc.FeatureMainDescription)"
+             Level="1"
+             ConfigurableDirectory="INSTALLDIR">
+      <ComponentRef Id="MainExecutableComponent" />
+      <ComponentGroupRef Id="AppPayloadGroup" />
+      <ComponentRef Id="ApplicationShortcutsComponent" />
+    </Feature>
+  </Product>
+</Wix>

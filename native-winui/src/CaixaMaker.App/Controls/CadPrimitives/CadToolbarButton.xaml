@@ -1,0 +1,119 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadPrimitives.CadToolbarButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Button
+        x:Name="RootButton"
+        MinWidth="26"
+        Height="26"
+        MinHeight="26"
+        Padding="0"
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Background="Transparent"
+        BorderThickness="0"
+        Click="OnRootButtonClick"
+        CornerRadius="{StaticResource CmControlCornerRadius}"
+        PointerEntered="OnRootPointerEntered"
+        PointerExited="OnRootPointerExited">
+        <Button.Resources>
+            <SolidColorBrush x:Key="ButtonBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent" />
+        </Button.Resources>
+
+        <Grid>
+            <!-- Fundo padrão / hover -->
+            <Border
+                x:Name="NormalSurface"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}" />
+
+            <Border
+                x:Name="HoverSurface"
+                Background="{ThemeResource CmElevatedHoverSurfaceBrush}"
+                BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                Visibility="Collapsed" />
+
+            <!-- Estado ativo verde (#16A34A) -->
+            <Border
+                x:Name="ActiveSurface"
+                Background="{ThemeResource CmAccentSelectionBrush}"
+                BorderBrush="{ThemeResource CmAccentSelectionBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                Visibility="Collapsed">
+                <Border
+                    Height="2"
+                    VerticalAlignment="Bottom"
+                    Background="{ThemeResource CmAccentPrimaryBrush}" />
+            </Border>
+
+            <!-- Estado destrutivo (vermelho) -->
+            <Border
+                x:Name="DestructiveHoverSurface"
+                Background="{ThemeResource CmStatusDangerSoftBrush}"
+                BorderBrush="{ThemeResource CmStatusDangerBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                Visibility="Collapsed" />
+
+            <!-- Estado primário sólido (ex: + Texto, SVG 1:1) -->
+            <Border
+                x:Name="PrimarySurface"
+                Background="{ThemeResource CmAccentPrimaryBrush}"
+                BorderBrush="{ThemeResource CmAccentPrimaryHoverBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                Visibility="Collapsed" />
+
+            <Border
+                x:Name="PrimaryHoverSurface"
+                Background="{ThemeResource CmAccentPrimaryHoverBrush}"
+                BorderBrush="{ThemeResource CmAccentPrimaryBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CmControlCornerRadius}"
+                Visibility="Collapsed" />
+
+            <!-- Conteúdo ícone + rótulo opcional -->
+            <StackPanel
+                x:Name="ContentStack"
+                Margin="6,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="4">
+                <FontIcon
+                    x:Name="GlyphIcon"
+                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                    FontSize="12.5"
+                    Foreground="{ThemeResource CmTextPrimaryBrush}" />
+
+                <TextBlock
+                    x:Name="TextGlyphBlock"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource CmMonoFontFamily}"
+                    FontSize="10.5"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource CmTextPrimaryBrush}"
+                    Visibility="Collapsed" />
+
+                <TextBlock
+                    x:Name="LabelTextBlock"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource CmUiFontFamily}"
+                    FontSize="11.5"
+                    Foreground="{ThemeResource CmTextPrimaryBrush}"
+                    Visibility="Collapsed" />
+            </StackPanel>
+        </Grid>
+    </Button>
+</UserControl>

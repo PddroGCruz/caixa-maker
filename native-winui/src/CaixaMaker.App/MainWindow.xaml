@@ -1,0 +1,343 @@
+<Window
+    x:Class="CaixaMaker.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:views="using:CaixaMaker.App.Views"
+    Title="Caixa Maker — Catálogo de Modelos">
+
+    <Grid
+        x:Name="RootLayout"
+        Background="{ThemeResource CmViewportCanvasBrush}"
+        PreviewKeyDown="OnRootPreviewKeyDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Barra de 7 Menus Nativos WinUI 3 -->
+        <Border
+            Grid.Row="0"
+            Background="{ThemeResource CmShellBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,0,0,1">
+            <MenuBar x:Name="MainMenuBar">
+                <!-- 1. Arquivo -->
+                <MenuBarItem Title="Arquivo">
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+N"
+                        Tag="file.new"
+                        Text="Novo Projeto" />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+O"
+                        Tag="file.open_project"
+                        Text="Abrir Projeto Salvo..." />
+                    <MenuFlyoutSubItem x:Name="MenuRecentProjectsSub" Text="Projetos Recentes" />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Shift+O"
+                        Tag="file.import_package"
+                        Text="Importar Projeto (.cmaker / legado)..." />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        x:Name="MenuFileSave"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+S"
+                        Tag="file.save"
+                        Text="Salvar Projeto" />
+                    <MenuFlyoutItem
+                        x:Name="MenuFileSaveAs"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Shift+S"
+                        Tag="file.save_as"
+                        Text="Salvar Projeto Como..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuFileExportPackage"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+E"
+                        Tag="file.export_package"
+                        Text="Exportar Projeto (.cmaker)..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuFileProperties"
+                        Click="OnMenuCommandClick"
+                        Tag="file.project_properties"
+                        Text="Propriedades do Projeto..." />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        x:Name="MenuFileBackToCatalog"
+                        Click="OnMenuCommandClick"
+                        Tag="file.back_to_catalog"
+                        Text="Voltar para Central de Trabalho" />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+F4"
+                        Tag="file.exit"
+                        Text="Sair" />
+                </MenuBarItem>
+
+                <!-- 2. Editar -->
+                <MenuBarItem Title="Editar">
+                    <MenuFlyoutItem
+                        x:Name="MenuEditUndo"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Z"
+                        Tag="edit.undo"
+                        Text="Desfazer" />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditRedo"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Y"
+                        Tag="edit.redo"
+                        Text="Refazer" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditCopy"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+C"
+                        Tag="edit.copy"
+                        Text="Copiar Elemento" />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditPaste"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+V"
+                        Tag="edit.paste"
+                        Text="Colar Elemento" />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditDuplicate"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+D"
+                        Tag="edit.duplicate"
+                        Text="Duplicar Elemento" />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditDelete"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Del"
+                        Tag="edit.delete"
+                        Text="Excluir Elemento" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditClearAll"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Shift+Backspace"
+                        Tag="edit.clear_all"
+                        Text="Limpar Todos os Elementos" />
+                    <MenuFlyoutItem
+                        x:Name="MenuEditResetParams"
+                        Click="OnMenuCommandClick"
+                        Tag="edit.reset_parameters"
+                        Text="Restaurar Parâmetros Padrão" />
+                </MenuBarItem>
+
+                <!-- 3. Exibir -->
+                <MenuBarItem Title="Exibir">
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewMode3D"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+1"
+                        Tag="view.mode_3d"
+                        Text="Viewport 3D" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewMode2D"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+2"
+                        Tag="view.mode_2d"
+                        Text="Editor 2D" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewModeSplit"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+3"
+                        Tag="view.mode_split"
+                        Text="Modo Dividido (3D + 2D)" />
+                    <MenuFlyoutSeparator />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewLeftSidebar"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+B"
+                        Tag="view.toggle_left_sidebar"
+                        Text="Painel Esquerdo" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewRightSidebar"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Shift+B"
+                        Tag="view.toggle_right_sidebar"
+                        Text="Painel Direito" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewToolbar"
+                        Click="OnMenuCommandClick"
+                        Tag="view.toggle_toolbar"
+                        Text="Barra de Ferramentas CAD" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuViewDimensions"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+Shift+V"
+                        Tag="view.toggle_dimensions"
+                        Text="Mostrar Cotas 3D" />
+                    <MenuFlyoutItem
+                        x:Name="MenuViewResetCamera"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+R"
+                        Tag="view.reset_camera"
+                        Text="Restaurar Câmera Padrão" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutSubItem Text="Tema da Interface">
+                        <ToggleMenuFlyoutItem
+                            x:Name="MenuThemeSystem"
+                            Click="OnMenuCommandClick"
+                            Tag="view.theme_system"
+                            Text="Seguir Sistema (Windows)" />
+                        <ToggleMenuFlyoutItem
+                            x:Name="MenuThemeLight"
+                            Click="OnMenuCommandClick"
+                            Tag="view.theme_light"
+                            Text="Tema Claro" />
+                        <ToggleMenuFlyoutItem
+                            x:Name="MenuThemeDark"
+                            Click="OnMenuCommandClick"
+                            Tag="view.theme_dark"
+                            Text="Tema Escuro" />
+                    </MenuFlyoutSubItem>
+                </MenuBarItem>
+
+                <!-- 4. Projeto -->
+                <MenuBarItem Title="Projeto">
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuAreaModeling"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+1"
+                        Tag="project.area_modeling"
+                        Text="Área Modelagem" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuAreaPersonalization"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+2"
+                        Tag="project.area_personalization"
+                        Text="Área Personalização" />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuAreaFabrication"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+3"
+                        Tag="project.area_fabrication"
+                        Text="Área Fabricação" />
+                    <MenuFlyoutSeparator />
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuProjExploded"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+E"
+                        Tag="project.toggle_exploded"
+                        Text="Vista Explodida 3D" />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjLid"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+D"
+                        Tag="project.toggle_lid"
+                        Text="Abrir / Fechar Tampa" />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjToggleModel"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+M"
+                        Tag="project.toggle_model"
+                        Text="Alternar Modelo (Tampa ↔ Aberta)" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjAddText"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Alt+T"
+                        Tag="project.add_text"
+                        Text="Adicionar Texto CNC" />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjImportSvg"
+                        Click="OnMenuCommandClick"
+                        Tag="project.import_svg"
+                        Text="Importar SVG Vetorial..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjImportRaster"
+                        Click="OnMenuCommandClick"
+                        Tag="project.import_raster"
+                        Text="Importar Imagem para Gravação..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuProjValidate"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="F5"
+                        Tag="project.validate"
+                        Text="Executar Validação SAT" />
+                </MenuBarItem>
+
+                <!-- 5. Ferramentas -->
+                <MenuBarItem Title="Ferramentas">
+                    <MenuFlyoutItem
+                        x:Name="MenuToolsExportSvg"
+                        Click="OnMenuCommandClick"
+                        Tag="tools.export_svg"
+                        Text="Exportar SVG Multicamadas (.svg)..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuToolsExportDxf"
+                        Click="OnMenuCommandClick"
+                        Tag="tools.export_dxf"
+                        Text="Exportar DXF R2000 (.dxf)..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuToolsExportPdf"
+                        Click="OnMenuCommandClick"
+                        Tag="tools.export_pdf"
+                        Text="Exportar PDF 1:1 (.pdf)..." />
+                    <MenuFlyoutItem
+                        x:Name="MenuToolsExportZip"
+                        Click="OnMenuCommandClick"
+                        Tag="tools.export_zip"
+                        Text="Exportar Pacote Completo CNC (.zip)..." />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        Tag="tools.saved_projects"
+                        Text="Gerenciador de Projetos Salvos..." />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="Ctrl+,"
+                        Tag="tools.preferences"
+                        Text="Preferências e Configurações..." />
+                </MenuBarItem>
+
+                <!-- 6. Janela -->
+                <MenuBarItem Title="Janela">
+                    <ToggleMenuFlyoutItem
+                        x:Name="MenuWindowFullscreen"
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="F11"
+                        Tag="window.toggle_fullscreen"
+                        Text="Tela Cheia" />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        Tag="window.minimize"
+                        Text="Minimizar" />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        Tag="window.toggle_maximize"
+                        Text="Maximizar / Restaurar" />
+                </MenuBarItem>
+
+                <!-- 7. Ajuda -->
+                <MenuBarItem Title="Ajuda">
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        Tag="help.about"
+                        Text="Sobre o Caixa Maker..." />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        KeyboardAcceleratorTextOverride="F1"
+                        Tag="help.shortcuts"
+                        Text="Atalhos de Teclado..." />
+                    <MenuFlyoutItem
+                        Click="OnMenuCommandClick"
+                        Tag="help.institution"
+                        Text="Vínculo Institucional (IFMaker / IFAC)..." />
+                </MenuBarItem>
+            </MenuBar>
+        </Border>
+
+        <!-- Troca entre Central de Trabalho e Workspace CAD/CAM -->
+        <Grid Grid.Row="1">
+            <views:CatalogHomeView x:Name="CatalogView" />
+            <views:WorkspaceSplitShell x:Name="WorkspaceShell" Visibility="Collapsed" />
+        </Grid>
+    </Grid>
+</Window>

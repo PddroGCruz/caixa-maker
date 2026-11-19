@@ -1,0 +1,725 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+        <!-- Dark Theme (Default em WinUI 3 — Grafite Técnica Neutra 95% + Acento Verde 5%) -->
+        <ResourceDictionary x:Key="Default">
+            <!-- Tokens CAD/CAM Fase 1 -->
+            <SolidColorBrush x:Key="CmViewportCanvasBrush" Color="#111317" />
+            <SolidColorBrush x:Key="CmShellBackgroundBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmPanelBackgroundBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmSectionHeaderBackgroundBrush" Color="#1E232B" />
+            <SolidColorBrush x:Key="CmInputBackgroundBrush" Color="#101317" />
+            <SolidColorBrush x:Key="CmElevatedSurfaceBrush" Color="#222831" />
+            <SolidColorBrush x:Key="CmElevatedHoverSurfaceBrush" Color="#28303B" />
+            <SolidColorBrush x:Key="CmHairlineBorderBrush" Color="#2A303A" />
+            <SolidColorBrush x:Key="CmSubtleBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmTextPrimaryBrush" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="CmTextSecondaryBrush" Color="#A0AAB8" />
+
+            <SolidColorBrush x:Key="CmAccentPrimaryBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentPrimaryHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentHighlightBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentSelectionBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSelectionBorderBrush" Color="#6616A34A" />
+
+            <SolidColorBrush x:Key="CmStatusSuccessBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmStatusSuccessSoftBrush" Color="#1F22C55E" />
+            <SolidColorBrush x:Key="CmStatusWarningBrush" Color="#F59E0B" />
+            <SolidColorBrush x:Key="CmStatusWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmStatusDangerBrush" Color="#EF4444" />
+            <SolidColorBrush x:Key="CmStatusDangerSoftBrush" Color="#1FEF4444" />
+            <SolidColorBrush x:Key="CmDangerActionBrush" Color="#DC2626" />
+
+            <SolidColorBrush x:Key="CmTableRowEvenBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmTableRowAltBrush" Color="#14181E" />
+
+            <!-- Aliases de compatibilidade para views existentes em transição -->
+            <SolidColorBrush x:Key="CmBgBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmBgSecondaryBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmPanelBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmPanelSubtleBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmElevatedBrush" Color="#222831" />
+            <SolidColorBrush x:Key="CmElevatedHoverBrush" Color="#28303B" />
+            <SolidColorBrush x:Key="CmBorderBrush" Color="#2A303A" />
+            <SolidColorBrush x:Key="CmBorderSubtleBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmTextBrush" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="CmTextMutedBrush" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="CmTextSubtleBrush" Color="#747E8C" />
+            <SolidColorBrush x:Key="CmAccentBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentLightBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentStrongBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentBtnBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentBtnHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentSoftBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSoftBorderBrush" Color="#6616A34A" />
+            <SolidColorBrush x:Key="CmIfMakerGreenBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmToolbarBgBrush" Color="#1E232B" />
+            <SolidColorBrush x:Key="CmStatusbarBgBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmInputBgBrush" Color="#101317" />
+            <SolidColorBrush x:Key="CmInputBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmDangerBrush" Color="#EF4444" />
+            <SolidColorBrush x:Key="CmDangerSoftBrush" Color="#1FEF4444" />
+            <SolidColorBrush x:Key="CmWarningBrush" Color="#F59E0B" />
+            <SolidColorBrush x:Key="CmWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmBrandSurfaceBrush" Color="#F4F6F8" />
+            <SolidColorBrush x:Key="CmRailBgBrush" Color="#111317" />
+            <SolidColorBrush x:Key="CmHeroBgBrush" Color="#181C22" />
+
+            <!-- Sobrescritas WinUI 3 de contraste para ComboBox, TextBox e Botões (Dark) -->
+            <x:Double x:Key="TextControlThemeMinHeight">0</x:Double>
+            <Thickness x:Key="TextControlThemePadding">6,0,6,0</Thickness>
+            <SolidColorBrush x:Key="TextControlBackground" Color="#101317" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#161A20" />
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#101317" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#16A34A" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#747E8C" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#8E98A8" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#8E98A8" />
+            <SolidColorBrush x:Key="ComboBoxBackground" Color="#101317" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#1A1F27" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="#222831" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="#14171C" />
+            <SolidColorBrush x:Key="ComboBoxForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="#687385" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="#747E8C" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundPointerOver" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocused" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#181C22" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#222831" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#3316A34A" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#28303B" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#1E232B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#FFFFFF" />
+        </ResourceDictionary>
+
+        <!-- Explicit Dark alias -->
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="CmViewportCanvasBrush" Color="#111317" />
+            <SolidColorBrush x:Key="CmShellBackgroundBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmPanelBackgroundBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmSectionHeaderBackgroundBrush" Color="#1E232B" />
+            <SolidColorBrush x:Key="CmInputBackgroundBrush" Color="#101317" />
+            <SolidColorBrush x:Key="CmElevatedSurfaceBrush" Color="#222831" />
+            <SolidColorBrush x:Key="CmElevatedHoverSurfaceBrush" Color="#28303B" />
+            <SolidColorBrush x:Key="CmHairlineBorderBrush" Color="#2A303A" />
+            <SolidColorBrush x:Key="CmSubtleBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmTextPrimaryBrush" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="CmTextSecondaryBrush" Color="#A0AAB8" />
+
+            <SolidColorBrush x:Key="CmAccentPrimaryBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentPrimaryHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentHighlightBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentSelectionBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSelectionBorderBrush" Color="#6616A34A" />
+
+            <SolidColorBrush x:Key="CmStatusSuccessBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmStatusSuccessSoftBrush" Color="#1F22C55E" />
+            <SolidColorBrush x:Key="CmStatusWarningBrush" Color="#F59E0B" />
+            <SolidColorBrush x:Key="CmStatusWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmStatusDangerBrush" Color="#EF4444" />
+            <SolidColorBrush x:Key="CmStatusDangerSoftBrush" Color="#1FEF4444" />
+            <SolidColorBrush x:Key="CmDangerActionBrush" Color="#DC2626" />
+
+            <SolidColorBrush x:Key="CmTableRowEvenBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmTableRowAltBrush" Color="#14181E" />
+
+            <SolidColorBrush x:Key="CmBgBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmBgSecondaryBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmPanelBrush" Color="#181C22" />
+            <SolidColorBrush x:Key="CmPanelSubtleBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmElevatedBrush" Color="#222831" />
+            <SolidColorBrush x:Key="CmElevatedHoverBrush" Color="#28303B" />
+            <SolidColorBrush x:Key="CmBorderBrush" Color="#2A303A" />
+            <SolidColorBrush x:Key="CmBorderSubtleBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmTextBrush" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="CmTextMutedBrush" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="CmTextSubtleBrush" Color="#747E8C" />
+            <SolidColorBrush x:Key="CmAccentBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentLightBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentStrongBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentBtnBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentBtnHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentSoftBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSoftBorderBrush" Color="#6616A34A" />
+            <SolidColorBrush x:Key="CmIfMakerGreenBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmToolbarBgBrush" Color="#1E232B" />
+            <SolidColorBrush x:Key="CmStatusbarBgBrush" Color="#14171C" />
+            <SolidColorBrush x:Key="CmInputBgBrush" Color="#101317" />
+            <SolidColorBrush x:Key="CmInputBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="CmDangerBrush" Color="#EF4444" />
+            <SolidColorBrush x:Key="CmDangerSoftBrush" Color="#1FEF4444" />
+            <SolidColorBrush x:Key="CmWarningBrush" Color="#F59E0B" />
+            <SolidColorBrush x:Key="CmWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmBrandSurfaceBrush" Color="#F4F6F8" />
+            <SolidColorBrush x:Key="CmRailBgBrush" Color="#111317" />
+            <SolidColorBrush x:Key="CmHeroBgBrush" Color="#181C22" />
+
+            <!-- Sobrescritas WinUI 3 de contraste para ComboBox, TextBox e Botões (Dark) -->
+            <x:Double x:Key="TextControlThemeMinHeight">0</x:Double>
+            <Thickness x:Key="TextControlThemePadding">6,0,6,0</Thickness>
+            <SolidColorBrush x:Key="TextControlBackground" Color="#101317" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#161A20" />
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#101317" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#16A34A" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#747E8C" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#8E98A8" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#8E98A8" />
+            <SolidColorBrush x:Key="ComboBoxBackground" Color="#101317" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#1A1F27" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="#222831" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="#14171C" />
+            <SolidColorBrush x:Key="ComboBoxForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="#687385" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="#747E8C" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundPointerOver" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocused" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="#A0AAB8" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#181C22" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#343C49" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#222831" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#3316A34A" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#28303B" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#1E232B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#4A5568" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#ECEFF4" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#FFFFFF" />
+        </ResourceDictionary>
+
+        <!-- Light Theme (Cinza-Frio Técnico de Engenharia) -->
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="CmViewportCanvasBrush" Color="#DFE4EC" />
+            <SolidColorBrush x:Key="CmShellBackgroundBrush" Color="#EAEFF5" />
+            <SolidColorBrush x:Key="CmPanelBackgroundBrush" Color="#F4F6F9" />
+            <SolidColorBrush x:Key="CmSectionHeaderBackgroundBrush" Color="#E4E9F0" />
+            <SolidColorBrush x:Key="CmInputBackgroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CmElevatedSurfaceBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CmElevatedHoverSurfaceBrush" Color="#EDF1F7" />
+            <SolidColorBrush x:Key="CmHairlineBorderBrush" Color="#C8D0DC" />
+            <SolidColorBrush x:Key="CmSubtleBorderBrush" Color="#B7C1D0" />
+            <SolidColorBrush x:Key="CmTextPrimaryBrush" Color="#181D25" />
+            <SolidColorBrush x:Key="CmTextSecondaryBrush" Color="#4B5563" />
+
+            <SolidColorBrush x:Key="CmAccentPrimaryBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentPrimaryHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentHighlightBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentSelectionBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSelectionBorderBrush" Color="#5916A34A" />
+
+            <SolidColorBrush x:Key="CmStatusSuccessBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmStatusSuccessSoftBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmStatusWarningBrush" Color="#D97706" />
+            <SolidColorBrush x:Key="CmStatusWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmStatusDangerBrush" Color="#DC2626" />
+            <SolidColorBrush x:Key="CmStatusDangerSoftBrush" Color="#1FDC2626" />
+            <SolidColorBrush x:Key="CmDangerActionBrush" Color="#DC2626" />
+
+            <SolidColorBrush x:Key="CmTableRowEvenBrush" Color="#F4F6F9" />
+            <SolidColorBrush x:Key="CmTableRowAltBrush" Color="#EAEFF5" />
+
+            <!-- Aliases de compatibilidade -->
+            <SolidColorBrush x:Key="CmBgBrush" Color="#EAEFF5" />
+            <SolidColorBrush x:Key="CmBgSecondaryBrush" Color="#E4E9F0" />
+            <SolidColorBrush x:Key="CmPanelBrush" Color="#F4F6F9" />
+            <SolidColorBrush x:Key="CmPanelSubtleBrush" Color="#EAEFF5" />
+            <SolidColorBrush x:Key="CmElevatedBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CmElevatedHoverBrush" Color="#EDF1F7" />
+            <SolidColorBrush x:Key="CmBorderBrush" Color="#C8D0DC" />
+            <SolidColorBrush x:Key="CmBorderSubtleBrush" Color="#D5DCE6" />
+            <SolidColorBrush x:Key="CmTextBrush" Color="#181D25" />
+            <SolidColorBrush x:Key="CmTextMutedBrush" Color="#4B5563" />
+            <SolidColorBrush x:Key="CmTextSubtleBrush" Color="#6B7280" />
+            <SolidColorBrush x:Key="CmAccentBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentLightBrush" Color="#22C55E" />
+            <SolidColorBrush x:Key="CmAccentStrongBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentBtnBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmAccentBtnHoverBrush" Color="#15803D" />
+            <SolidColorBrush x:Key="CmAccentSoftBrush" Color="#1F16A34A" />
+            <SolidColorBrush x:Key="CmAccentSoftBorderBrush" Color="#5916A34A" />
+            <SolidColorBrush x:Key="CmIfMakerGreenBrush" Color="#16A34A" />
+            <SolidColorBrush x:Key="CmToolbarBgBrush" Color="#E4E9F0" />
+            <SolidColorBrush x:Key="CmStatusbarBgBrush" Color="#E2E7EE" />
+            <SolidColorBrush x:Key="CmInputBgBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CmInputBorderBrush" Color="#C8D0DC" />
+            <SolidColorBrush x:Key="CmDangerBrush" Color="#DC2626" />
+            <SolidColorBrush x:Key="CmDangerSoftBrush" Color="#1FDC2626" />
+            <SolidColorBrush x:Key="CmWarningBrush" Color="#D97706" />
+            <SolidColorBrush x:Key="CmWarningSoftBrush" Color="#1FF59E0B" />
+            <SolidColorBrush x:Key="CmBrandSurfaceBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CmRailBgBrush" Color="#DFE4EC" />
+            <SolidColorBrush x:Key="CmHeroBgBrush" Color="#EAEFF5" />
+
+            <!-- Sobrescritas WinUI 3 de contraste para ComboBox, TextBox e Botões (Light) -->
+            <x:Double x:Key="TextControlThemeMinHeight">0</x:Double>
+            <Thickness x:Key="TextControlThemePadding">6,0,6,0</Thickness>
+            <SolidColorBrush x:Key="TextControlBackground" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="#181D25" />
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#181D25" />
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#181D25" />
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#B7C1D0" />
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#8E9AAE" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#16A34A" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#6B7280" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#4B5563" />
+            <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#4B5563" />
+            <SolidColorBrush x:Key="ComboBoxBackground" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#F8FAFC" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="#EEF2F7" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="#EFF3F8" />
+            <SolidColorBrush x:Key="ComboBoxForeground" Color="#181D25" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="#0F141B" />
+            <SolidColorBrush x:Key="ComboBoxForegroundPressed" Color="#0F141B" />
+            <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="#8892A2" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground" Color="#6B7280" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundPointerOver" Color="#4B5563" />
+            <SolidColorBrush x:Key="ComboBoxPlaceHolderForegroundFocused" Color="#4B5563" />
+            <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="#4B5563" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#B7C1D0" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="#8E9AAE" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#F4F6F9" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#B7C1D0" />
+            <SolidColorBrush x:Key="ComboBoxItemForeground" Color="#181D25" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver" Color="#0F141B" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="#14532D" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#E4E9F0" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#2416A34A" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#3816A34A" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#EDF1F7" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#DCE3ED" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#8E9AAE" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#16A34A" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#181D25" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#0F141B" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Geometria e tipografia padrão CAD/CAM (alta densidade) -->
+    <CornerRadius x:Key="CmControlCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="CmPanelCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="CmHudCornerRadius">4</CornerRadius>
+
+    <FontFamily x:Key="CmMonoFontFamily">Cascadia Mono, Consolas, Courier New</FontFamily>
+    <FontFamily x:Key="CmUiFontFamily">Segoe UI Variable Text, Segoe UI</FontFamily>
+
+    <x:Double x:Key="CmFontSizeCaption">11</x:Double>
+    <x:Double x:Key="CmFontSizeBody">12</x:Double>
+    <x:Double x:Key="CmFontSizePanelTitle">13</x:Double>
+    <x:Double x:Key="ContentDialogMaxWidth">760</x:Double>
+
+    <!-- Tipografia e estilos reutilizáveis CAD/CAM -->
+    <Style x:Key="PanelHeaderTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizePanelTitle}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+    </Style>
+
+    <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeCaption}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextSecondaryBrush}" />
+    </Style>
+
+    <Style x:Key="CadSectionTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeCaption}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="CharacterSpacing" Value="40" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextSecondaryBrush}" />
+    </Style>
+
+    <Style x:Key="CadPropertyLabelStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextSecondaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <Style x:Key="MonoMetricTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmMonoFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+    </Style>
+
+    <Style x:Key="CadMonoValueStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource CmMonoFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="CadCardBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource CmPanelBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmHairlineBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style x:Key="PrimaryAccentButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource CmAccentPrimaryBrush}" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style x:Key="OutlineAccentButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource CmAccentSelectionBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmAccentHighlightBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmAccentSelectionBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="9,4" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+    </Style>
+
+    <Style x:Key="CompactToolbarButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="7,3" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+    </Style>
+
+    <Style x:Key="CadSecondaryButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource CmElevatedSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmSubtleBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+    </Style>
+
+    <Style x:Key="DangerOutlineButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource CmStatusDangerSoftBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmStatusDangerBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmStatusDangerBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="Padding" Value="9,4" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+    </Style>
+
+    <!-- Estilos padronizados de formulários e botões segmentados CAD (Fase 3) -->
+    <Style x:Key="CadComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Height" Value="26" />
+        <Setter Property="MinHeight" Value="26" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource CmInputBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmSubtleBorderBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Padding" Value="8,2,8,2" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="CadTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Height" Value="26" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource CmInputBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmSubtleBorderBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}" />
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Padding" Value="7,0,7,0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style x:Name="DeleteButtonStyle" TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid
+                                                x:Name="ButtonLayoutGrid"
+                                                Margin="{ThemeResource TextBoxInnerButtonMargin}"
+                                                Background="{ThemeResource TextControlButtonBackground}"
+                                                BorderBrush="{ThemeResource TextControlButtonBorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="{TemplateBinding CornerRadius}">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal" />
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLayoutGrid" Storyboard.TargetProperty="Background">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPointerOver}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLayoutGrid" Storyboard.TargetProperty="BorderBrush">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPointerOver}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphElement" Storyboard.TargetProperty="Foreground">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPointerOver}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Pressed">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLayoutGrid" Storyboard.TargetProperty="Background">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPressed}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonLayoutGrid" Storyboard.TargetProperty="BorderBrush">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPressed}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphElement" Storyboard.TargetProperty="Foreground">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPressed}" />
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation
+                                                                    Storyboard.TargetName="ButtonLayoutGrid"
+                                                                    Storyboard.TargetProperty="Opacity"
+                                                                    To="0"
+                                                                    Duration="0" />
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                <TextBlock
+                                                    x:Name="GlyphElement"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    AutomationProperties.AccessibilityView="Raw"
+                                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    FontSize="{ThemeResource TextBoxIconFontSize}"
+                                                    FontStyle="Normal"
+                                                    Foreground="{ThemeResource TextControlButtonForeground}"
+                                                    Text="&#xE894;" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundDisabled}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushDisabled}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundDisabled}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderTextContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundDisabled}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushPointerOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundPointerOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderTextContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundPointerOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundPointerOver}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderTextContentPresenter" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundFocused}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundFocused}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushFocused}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="BorderThickness">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderThemeThicknessFocused}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundFocused}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ButtonStates">
+                                <VisualState x:Name="ButtonVisible">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DeleteButton" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="ButtonCollapsed" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="BorderElement"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            MinWidth="{TemplateBinding MinWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Control.IsTemplateFocusTarget="True"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                        <ScrollViewer
+                            x:Name="ContentElement"
+                            Grid.Column="0"
+                            Margin="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                            HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                            IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                            IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                            IsTabStop="False"
+                            IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                            VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                            VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                            ZoomMode="Disabled" />
+                        <TextBlock
+                            x:Name="PlaceholderTextContentPresenter"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Foreground="{ThemeResource TextControlPlaceholderForeground}"
+                            IsHitTestVisible="False"
+                            Text="{TemplateBinding PlaceholderText}"
+                            TextAlignment="{TemplateBinding TextAlignment}"
+                            TextWrapping="{TemplateBinding TextWrapping}" />
+                        <Button
+                            x:Name="DeleteButton"
+                            Grid.Column="1"
+                            Width="26"
+                            Padding="{ThemeResource HelperButtonThemePadding}"
+                            VerticalAlignment="Stretch"
+                            AutomationProperties.AccessibilityView="Raw"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            FontSize="{TemplateBinding FontSize}"
+                            IsTabStop="False"
+                            Style="{StaticResource DeleteButtonStyle}"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CadSegmentedButtonStyle" TargetType="Button">
+        <Setter Property="Height" Value="26" />
+        <Setter Property="MinHeight" Value="26" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource CmElevatedSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmSubtleBorderBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeCaption}" />
+        <Setter Property="Padding" Value="6,2" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="CadActionButtonStyle" TargetType="Button">
+        <Setter Property="Height" Value="28" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CmControlCornerRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource CmElevatedSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CmSubtleBorderBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource CmTextPrimaryBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource CmUiFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource CmFontSizeBody}" />
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,102 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadPrimitives.CadStatusBadge"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Height="20">
+        <!-- Neutral -->
+        <Border
+            x:Name="NeutralBorder"
+            Padding="6,0"
+            Background="{ThemeResource CmSectionHeaderBackgroundBrush}"
+            BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CmControlCornerRadius}">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Ellipse
+                    Width="6"
+                    Height="6"
+                    VerticalAlignment="Center"
+                    Fill="{ThemeResource CmTextSecondaryBrush}" />
+                <TextBlock
+                    x:Name="NeutralText"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource CmTextSecondaryBrush}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Valid -->
+        <Border
+            x:Name="ValidBorder"
+            Padding="6,0"
+            Background="{ThemeResource CmStatusSuccessSoftBrush}"
+            BorderBrush="{ThemeResource CmAccentSelectionBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CmControlCornerRadius}"
+            Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Ellipse
+                    Width="6"
+                    Height="6"
+                    VerticalAlignment="Center"
+                    Fill="{ThemeResource CmStatusSuccessBrush}" />
+                <TextBlock
+                    x:Name="ValidText"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource CmStatusSuccessBrush}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Warning / Dirty -->
+        <Border
+            x:Name="WarningBorder"
+            Padding="6,0"
+            Background="{ThemeResource CmStatusWarningSoftBrush}"
+            BorderBrush="{ThemeResource CmStatusWarningBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CmControlCornerRadius}"
+            Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Ellipse
+                    Width="6"
+                    Height="6"
+                    VerticalAlignment="Center"
+                    Fill="{ThemeResource CmStatusWarningBrush}" />
+                <TextBlock
+                    x:Name="WarningText"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource CmStatusWarningBrush}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Error -->
+        <Border
+            x:Name="ErrorBorder"
+            Padding="6,0"
+            Background="{ThemeResource CmStatusDangerSoftBrush}"
+            BorderBrush="{ThemeResource CmStatusDangerBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CmControlCornerRadius}"
+            Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Ellipse
+                    Width="6"
+                    Height="6"
+                    VerticalAlignment="Center"
+                    Fill="{ThemeResource CmStatusDangerBrush}" />
+                <TextBlock
+                    x:Name="ErrorText"
+                    VerticalAlignment="Center"
+                    FontSize="11"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource CmStatusDangerBrush}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

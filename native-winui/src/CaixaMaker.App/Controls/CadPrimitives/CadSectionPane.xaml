@@ -1,0 +1,78 @@
+<UserControl
+    x:Class="CaixaMaker.App.Controls.CadPrimitives.CadSectionPane"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Spacing="0">
+        <!-- Cabeçalho técnico compacto (26 px) -->
+        <Border
+            x:Name="HeaderBorder"
+            Height="26"
+            Padding="8,0,6,0"
+            Background="{ThemeResource CmSectionHeaderBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,1,0,1"
+            PointerEntered="OnHeaderPointerEntered"
+            PointerExited="OnHeaderPointerExited"
+            PointerPressed="OnHeaderPointerPressed">
+            <Grid ColumnSpacing="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    x:Name="ChevronText"
+                    Grid.Column="0"
+                    Width="10"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource CmMonoFontFamily}"
+                    FontSize="10"
+                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                    Text="▾" />
+
+                <TextBlock
+                    x:Name="TitleText"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource CadSectionTitleStyle}"
+                    Text="SEÇÃO"
+                    TextTrimming="CharacterEllipsis" />
+
+                <Border
+                    x:Name="BadgeBorder"
+                    Grid.Column="2"
+                    Height="17"
+                    Padding="5,0"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource CmInputBackgroundBrush}"
+                    BorderBrush="{ThemeResource CmSubtleBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CmControlCornerRadius}"
+                    Visibility="Collapsed">
+                    <TextBlock
+                        x:Name="BadgeTextBlock"
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}" />
+                </Border>
+
+                <ContentPresenter
+                    x:Name="HeaderActionPresenter"
+                    Grid.Column="3"
+                    VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Corpo plano de alta densidade -->
+        <Border
+            x:Name="BodyBorder"
+            Padding="8,5,8,6"
+            Background="Transparent">
+            <ContentPresenter x:Name="BodyPresenter" />
+        </Border>
+    </StackPanel>
+</UserControl>
