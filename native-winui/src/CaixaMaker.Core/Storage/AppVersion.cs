@@ -23,7 +23,7 @@ public static partial class AppVersion
     public static string Version => GetAppVersion();
 
     public static string AssemblyVersion =>
-        typeof(AppVersion).Assembly.GetName().Version?.ToString() ?? "2.3.0.0";
+        typeof(AppVersion).Assembly.GetName().Version?.ToString() ?? "2.4.0.0";
 
     public static string FileVersion =>
         typeof(AppVersion).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version

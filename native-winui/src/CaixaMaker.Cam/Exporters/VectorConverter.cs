@@ -32,6 +32,7 @@ public static class VectorConverter
         ("ENGRAVE_VECTOR", 5),
         ("ENGRAVE_FILL", 6),
         ("MARK", 3),
+        ("SHEET_BOUNDS", 8),
     ];
 
     private static readonly Regex RgbFuncRegex = new(
@@ -192,6 +193,11 @@ public static class VectorConverter
         }
 
         string token = $"{shape.DataLayer} {shape.ElementId} {shape.AncestorLayerId}".ToLowerInvariant();
+        if (token.Contains("sheet_bounds", StringComparison.Ordinal))
+        {
+            return "SHEET_BOUNDS";
+        }
+
         if (token.Contains("cut_internal", StringComparison.Ordinal))
         {
             return "CUT_INTERNAL";

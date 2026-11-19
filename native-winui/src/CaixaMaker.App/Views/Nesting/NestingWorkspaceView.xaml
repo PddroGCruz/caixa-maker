@@ -1,0 +1,807 @@
+<UserControl
+    x:Class="CaixaMaker.App.Views.Nesting.NestingWorkspaceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cad="using:CaixaMaker.App.Controls.CadPrimitives"
+    xmlns:controls="using:CaixaMaker.App.Controls">
+
+    <Grid Background="{ThemeResource CmViewportCanvasBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Cabeçalho Superior do Otimizador -->
+        <Border
+            Grid.Row="0"
+            Padding="10,0"
+            Background="{ThemeResource CmShellBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,0,0,1">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                    <Button
+                        x:Name="BackFromNestingBtn"
+                        Height="26"
+                        MinHeight="26"
+                        Padding="10,0"
+                        Click="OnReturnFromNestingClick"
+                        Content="← Voltar ao Catálogo"
+                        Style="{StaticResource CadSegmentedButtonStyle}" />
+
+                    <Rectangle Width="1" Height="16" Fill="{ThemeResource CmHairlineBorderBrush}" />
+
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource CmUiFontFamily}"
+                        FontSize="12.5"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                        Text="Otimizador de Corte 2D (Nesting)" />
+                </StackPanel>
+
+                <!-- Badges KPI de resumo -->
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Spacing="6">
+                    <cad:CadStatusBadge
+                        x:Name="HeaderUtilBadge"
+                        Kind="Valid"
+                        Text="Aproveitamento: —" />
+                    <cad:CadStatusBadge
+                        x:Name="HeaderPlacedBadge"
+                        Kind="Neutral"
+                        Text="0 / 0 peças" />
+                    <cad:CadStatusBadge
+                        x:Name="HeaderSheetsBadge"
+                        Kind="Neutral"
+                        Text="0 chapas" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                    <controls:CadThemeSwitcher x:Name="NestingThemeSwitcher" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Row 1: Corpo Principal em 3 Colunas (Fila 310px | Viewport * | Espaço Útil & Exportação 320px) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="310" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Coluna 0: Painel Esquerdo — Fila de Peças -->
+            <Border
+                Grid.Column="0"
+                Background="{ThemeResource CmPanelBackgroundBrush}"
+                BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Barra de ações + Lote da caixa ativa -->
+                    <StackPanel Grid.Row="0" Padding="10,8" Spacing="7">
+                        <TextBlock
+                            FontFamily="{StaticResource CmUiFontFamily}"
+                            FontSize="10.5"
+                            FontWeight="SemiBold"
+                            Foreground="{ThemeResource CmTextSecondaryBrush}"
+                            Text="FILA DE PEÇAS (1:1 MM)" />
+
+                        <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button
+                                x:Name="ImportExternalFilesBtn"
+                                Grid.Column="0"
+                                Height="28"
+                                HorizontalAlignment="Stretch"
+                                Click="OnImportExternalFilesClick"
+                                Content="+ Importar SVG / DXF"
+                                Style="{StaticResource PrimaryAccentButtonStyle}"
+                                ToolTipService.ToolTip="Importar um ou mais arquivos .svg ou .dxf em escala 1:1 (mm)" />
+
+                            <Button
+                                x:Name="ClearQueueBtn"
+                                Grid.Column="1"
+                                Height="28"
+                                Padding="8,0"
+                                Click="OnClearQueueClick"
+                                Content="Limpar"
+                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                        </Grid>
+
+                        <Button
+                            x:Name="LoadActiveBoxBtn"
+                            Height="26"
+                            HorizontalAlignment="Stretch"
+                            Click="OnLoadActiveBoxClick"
+                            Content="+ Chapas da Caixa Ativa"
+                            Style="{StaticResource CadActionButtonStyle}"
+                            Visibility="Collapsed" />
+
+                        <!-- Card compacto: Lote da Caixa Ativa -->
+                        <Border
+                            x:Name="ActiveBoxBatchCard"
+                            Padding="8,6"
+                            Background="{ThemeResource CmShellBackgroundBrush}"
+                            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CmControlCornerRadius}"
+                            Visibility="Collapsed">
+                            <Grid ColumnSpacing="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="1">
+                                    <TextBlock
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                        Text="Lote da Caixa Ativa" />
+                                    <TextBlock
+                                        FontSize="10"
+                                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                        Text="Multiplica todas as chapas da caixa" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="10.5"
+                                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                        Text="Caixas:" />
+                                    <Button
+                                        x:Name="BoxCopiesDecBtn"
+                                        Width="22"
+                                        Height="22"
+                                        MinWidth="22"
+                                        MinHeight="22"
+                                        Padding="0"
+                                        Click="OnBoxCopiesDecClick"
+                                        Content="−"
+                                        Style="{StaticResource CadSegmentedButtonStyle}" />
+                                    <TextBlock
+                                        x:Name="BoxCopiesValueText"
+                                        MinWidth="20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontFamily="{StaticResource CmMonoFontFamily}"
+                                        FontSize="11.5"
+                                        FontWeight="SemiBold"
+                                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                        Text="1"
+                                        TextAlignment="Center" />
+                                    <Button
+                                        x:Name="BoxCopiesIncBtn"
+                                        Width="22"
+                                        Height="22"
+                                        MinWidth="22"
+                                        MinHeight="22"
+                                        Padding="0"
+                                        Click="OnBoxCopiesIncClick"
+                                        Content="+"
+                                        Style="{StaticResource CadSegmentedButtonStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <CheckBox
+                            x:Name="KeepSinglePartCheck"
+                            MinHeight="24"
+                            Checked="OnKeepSinglePartChanged"
+                            Content="Manter arquivo importado como peça única"
+                            FontSize="11"
+                            Unchecked="OnKeepSinglePartChanged" />
+                    </StackPanel>
+
+                    <!-- Lista rolável de peças -->
+                    <ScrollViewer
+                        Grid.Row="1"
+                        Padding="10,0,10,10"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Border
+                                x:Name="EmptyQueueState"
+                                Margin="0,8,0,0"
+                                Padding="12"
+                                VerticalAlignment="Top"
+                                Background="{ThemeResource CmShellBackgroundBrush}"
+                                BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CmControlCornerRadius}">
+                                <StackPanel Spacing="4">
+                                    <TextBlock
+                                        FontSize="11.5"
+                                        FontWeight="SemiBold"
+                                        Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                        Text="Nenhuma peça na fila" />
+                                    <TextBlock
+                                        FontSize="10.5"
+                                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                        Text="Importe arquivos .svg ou .dxf externos, ou carregue as chapas da caixa ativa para otimizar o corte em retalhos."
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+
+                            <ItemsControl x:Name="PartsQueueItemsControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="0,0,0,5"
+                                            Padding="7,6"
+                                            Background="{ThemeResource CmShellBackgroundBrush}"
+                                            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource CmControlCornerRadius}">
+                                            <StackPanel Spacing="5">
+                                                <Grid ColumnSpacing="5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border
+                                                        Grid.Column="0"
+                                                        Padding="5,1"
+                                                        VerticalAlignment="Center"
+                                                        Background="{ThemeResource CmAccentSelectionBrush}"
+                                                        BorderBrush="{ThemeResource CmAccentSelectionBorderBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="3">
+                                                        <TextBlock
+                                                            FontFamily="{StaticResource CmMonoFontFamily}"
+                                                            FontSize="9.5"
+                                                            FontWeight="SemiBold"
+                                                            Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                                            Text="{Binding SourceTag}" />
+                                                    </Border>
+
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="0">
+                                                        <TextBlock
+                                                            FontSize="11"
+                                                            FontWeight="SemiBold"
+                                                            Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                                            Text="{Binding Name}"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock
+                                                            FontFamily="{StaticResource CmMonoFontFamily}"
+                                                            FontSize="9.5"
+                                                            Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                                            Text="{Binding DimensionsLabel}" />
+                                                    </StackPanel>
+
+                                                    <Button
+                                                        Grid.Column="2"
+                                                        Width="22"
+                                                        Height="22"
+                                                        MinWidth="22"
+                                                        MinHeight="22"
+                                                        Padding="0"
+                                                        Command="{Binding RemoveCommand}"
+                                                        Content="✕"
+                                                        FontSize="10"
+                                                        Style="{StaticResource CadSegmentedButtonStyle}"
+                                                        ToolTipService.ToolTip="Remover peça da fila" />
+                                                </Grid>
+
+                                                <Grid ColumnSpacing="6">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="3">
+                                                        <Button
+                                                            Width="22"
+                                                            Height="22"
+                                                            MinWidth="22"
+                                                            MinHeight="22"
+                                                            Padding="0"
+                                                            Command="{Binding DecrementQuantityCommand}"
+                                                            Content="−"
+                                                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                                                        <TextBlock
+                                                            MinWidth="20"
+                                                            VerticalAlignment="Center"
+                                                            FontFamily="{StaticResource CmMonoFontFamily}"
+                                                            FontSize="11"
+                                                            FontWeight="SemiBold"
+                                                            Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                                            Text="{Binding Quantity}"
+                                                            TextAlignment="Center" />
+                                                        <Button
+                                                            Width="22"
+                                                            Height="22"
+                                                            MinWidth="22"
+                                                            MinHeight="22"
+                                                            Padding="0"
+                                                            Command="{Binding IncrementQuantityCommand}"
+                                                            Content="+"
+                                                            Style="{StaticResource CadSegmentedButtonStyle}" />
+                                                    </StackPanel>
+
+                                                    <ComboBox
+                                                        Grid.Column="1"
+                                                        Height="24"
+                                                        MinHeight="24"
+                                                        HorizontalAlignment="Stretch"
+                                                        FontSize="10.5"
+                                                        SelectedIndex="{Binding RotationPolicyIndex, Mode=TwoWay}">
+                                                        <ComboBoxItem Content="Rot: 0° (Fixo)" />
+                                                        <ComboBoxItem Content="Rot: 0° / 180°" />
+                                                        <ComboBoxItem Content="Rot: 0° / 90°" />
+                                                        <ComboBoxItem Content="Rot: 45°" />
+                                                    </ComboBox>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Coluna 1: Área Central — Viewport 2D SkiaSharp Interativo -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Barra superior do viewport -->
+                <Border
+                    Grid.Row="0"
+                    Padding="10,6"
+                    Background="{ThemeResource CmSectionHeaderBackgroundBrush}"
+                    BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                    BorderThickness="0,0,0,1">
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Navegador de chapas -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                            <Button
+                                x:Name="PrevSheetBtn"
+                                Width="26"
+                                Height="24"
+                                MinWidth="26"
+                                MinHeight="24"
+                                Padding="0"
+                                Click="OnPrevSheetClick"
+                                Content="←"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                ToolTipService.ToolTip="Chapa anterior" />
+                            <TextBlock
+                                x:Name="SheetCounterText"
+                                MinWidth="96"
+                                VerticalAlignment="Center"
+                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                FontSize="11"
+                                FontWeight="SemiBold"
+                                Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                Text="Sem chapas geradas"
+                                TextAlignment="Center" />
+                            <Button
+                                x:Name="NextSheetBtn"
+                                Width="26"
+                                Height="24"
+                                MinWidth="26"
+                                MinHeight="24"
+                                Padding="0"
+                                Click="OnNextSheetClick"
+                                Content="→"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                ToolTipService.ToolTip="Próxima chapa" />
+                        </StackPanel>
+
+                        <Button
+                            x:Name="FitToScreenBtn"
+                            Grid.Column="1"
+                            Height="24"
+                            MinHeight="24"
+                            Padding="10,0"
+                            HorizontalAlignment="Left"
+                            Click="OnFitToScreenClick"
+                            Content="Ajustar à Tela"
+                            Style="{StaticResource CadSegmentedButtonStyle}" />
+
+                        <!-- Toggles visuais -->
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                            <CheckBox
+                                x:Name="ShowBoundaryCheck"
+                                MinWidth="0"
+                                MinHeight="24"
+                                Checked="OnVisualToggleChanged"
+                                Content="Borda do Retalho"
+                                FontSize="10.5"
+                                IsChecked="True"
+                                Unchecked="OnVisualToggleChanged" />
+                            <CheckBox
+                                x:Name="ShowLabelsCheck"
+                                MinWidth="0"
+                                MinHeight="24"
+                                Checked="OnVisualToggleChanged"
+                                Content="Rótulos"
+                                FontSize="10.5"
+                                IsChecked="True"
+                                Unchecked="OnVisualToggleChanged" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Banner informativo in-place para peças não alocadas (não bloqueante) -->
+                <Border
+                    x:Name="UnplacedWarningBanner"
+                    Grid.Row="1"
+                    Margin="10,8,10,0"
+                    Padding="8,6"
+                    Background="#1AF59E0B"
+                    BorderBrush="{ThemeResource CmStatusWarningBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CmControlCornerRadius}"
+                    Visibility="Collapsed">
+                    <TextBlock
+                        x:Name="UnplacedWarningText"
+                        FontSize="11"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource CmStatusWarningBrush}"
+                        TextWrapping="Wrap" />
+                </Border>
+
+                <!-- Superfície SkiaSharp interativa (Zoom no cursor + Pan por arraste) -->
+                <Grid
+                    x:Name="ViewportHost"
+                    Grid.Row="2"
+                    Background="Transparent"
+                    PointerMoved="OnViewportPointerMoved"
+                    PointerPressed="OnViewportPointerPressed"
+                    PointerReleased="OnViewportPointerReleased"
+                    PointerWheelChanged="OnViewportPointerWheelChanged"
+                    SizeChanged="OnViewportSizeChanged">
+                    <Image
+                        x:Name="NestingCanvasImage"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Stretch="Fill" />
+                </Grid>
+            </Grid>
+
+            <!-- Coluna 2: Painel Direito — Espaço Útil, Otimização e Rodapé Fixo de Exportação -->
+            <Border
+                Grid.Column="2"
+                Background="{ThemeResource CmPanelBackgroundBrush}"
+                BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                BorderThickness="1,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer
+                        Grid.Row="0"
+                        Padding="0"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="0">
+                            <!-- Seção 1: Espaço Útil / Retalho -->
+                            <cad:CadSectionPane Title="ESPAÇO ÚTIL / RETALHO (MM)">
+                                <StackPanel Spacing="6">
+                                    <!-- Presets rápidos -->
+                                    <Grid ColumnSpacing="3" RowSpacing="3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Button
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Height="24"
+                                            MinHeight="24"
+                                            Click="OnSheetPresetClick"
+                                            Content="Mesa Laser Ativa (Etapa 3)"
+                                            FontSize="10.5"
+                                            Style="{StaticResource CadSegmentedButtonStyle}"
+                                            Tag="ActiveLaserBed" />
+                                        <Button
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Height="22"
+                                            MinHeight="22"
+                                            Click="OnSheetPresetClick"
+                                            Content="Retalho 300×200"
+                                            FontSize="10"
+                                            Style="{StaticResource CadSegmentedButtonStyle}"
+                                            Tag="Scrap300x200" />
+                                        <Button
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Height="22"
+                                            MinHeight="22"
+                                            Click="OnSheetPresetClick"
+                                            Content="Retalho 400×300"
+                                            FontSize="10"
+                                            Style="{StaticResource CadSegmentedButtonStyle}"
+                                            Tag="Scrap400x300" />
+                                        <Button
+                                            Grid.Row="2"
+                                            Grid.Column="0"
+                                            Height="22"
+                                            MinHeight="22"
+                                            Click="OnSheetPresetClick"
+                                            Content="Chapa 600×400"
+                                            FontSize="10"
+                                            Style="{StaticResource CadSegmentedButtonStyle}"
+                                            Tag="Sheet600x400" />
+                                        <Button
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Height="22"
+                                            MinHeight="22"
+                                            Click="OnSheetPresetClick"
+                                            Content="Chapa 900×600"
+                                            FontSize="10"
+                                            Style="{StaticResource CadSegmentedButtonStyle}"
+                                            Tag="Sheet900x600" />
+                                    </Grid>
+
+                                    <cad:CadPropertyRow Label="Largura (mm)" LabelWidth="112">
+                                        <cad:CadNumericInput
+                                            x:Name="SheetWidthInput"
+                                            DecimalPlaces="1"
+                                            Maximum="5000"
+                                            Minimum="50"
+                                            Step="10"
+                                            Unit="mm"
+                                            Value="600"
+                                            ValueChanged="OnSheetDimensionsChanged" />
+                                    </cad:CadPropertyRow>
+
+                                    <cad:CadPropertyRow Label="Altura (mm)" LabelWidth="112">
+                                        <cad:CadNumericInput
+                                            x:Name="SheetHeightInput"
+                                            DecimalPlaces="1"
+                                            Maximum="5000"
+                                            Minimum="50"
+                                            Step="10"
+                                            Unit="mm"
+                                            Value="400"
+                                            ValueChanged="OnSheetDimensionsChanged" />
+                                    </cad:CadPropertyRow>
+
+                                    <cad:CadPropertyRow Label="Margem (mm)" LabelWidth="112">
+                                        <cad:CadNumericInput
+                                            x:Name="MarginInput"
+                                            DecimalPlaces="1"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Step="1"
+                                            Unit="mm"
+                                            Value="5"
+                                            ValueChanged="OnSheetDimensionsChanged" />
+                                    </cad:CadPropertyRow>
+
+                                    <cad:CadPropertyRow Label="Espaçamento" LabelWidth="112">
+                                        <cad:CadNumericInput
+                                            x:Name="SpacingInput"
+                                            DecimalPlaces="1"
+                                            Maximum="50"
+                                            Minimum="0"
+                                            Step="0.5"
+                                            Unit="mm"
+                                            Value="3"
+                                            ValueChanged="OnSheetDimensionsChanged" />
+                                    </cad:CadPropertyRow>
+
+                                    <cad:CadPropertyRow
+                                        Label="Rotação Global"
+                                        LabelWidth="112"
+                                        ShowBottomDivider="False">
+                                        <ComboBox
+                                            x:Name="GlobalRotationCombo"
+                                            Height="26"
+                                            MinHeight="26"
+                                            HorizontalAlignment="Stretch"
+                                            FontSize="11"
+                                            SelectionChanged="OnGlobalRotationChanged">
+                                            <ComboBoxItem Content="Por peça" />
+                                            <ComboBoxItem Content="Travado 0°" />
+                                            <ComboBoxItem Content="0° / 180°" />
+                                            <ComboBoxItem Content="0° / 90°" />
+                                            <ComboBoxItem Content="45°" />
+                                        </ComboBox>
+                                    </cad:CadPropertyRow>
+
+                                    <CheckBox
+                                        x:Name="AllowHolesCheck"
+                                        MinHeight="24"
+                                        Checked="OnAllowHolesChanged"
+                                        Content="Encaixar peças menores em furos internos"
+                                        FontSize="11"
+                                        IsChecked="True"
+                                        Unchecked="OnAllowHolesChanged" />
+                                </StackPanel>
+                            </cad:CadSectionPane>
+
+                            <!-- Seção 2: Otimização True-Shape -->
+                            <cad:CadSectionPane Title="OTIMIZAÇÃO TRUE-SHAPE">
+                                <StackPanel Spacing="7">
+                                    <Button
+                                        x:Name="RunOptimizationBtn"
+                                        Height="32"
+                                        HorizontalAlignment="Stretch"
+                                        Click="OnRunOptimizationClick"
+                                        Content="Otimizar Disposição"
+                                        FontWeight="SemiBold"
+                                        Style="{StaticResource PrimaryAccentButtonStyle}" />
+
+                                    <!-- Progresso em execução -->
+                                    <StackPanel
+                                        x:Name="OptimizationProgressBox"
+                                        Spacing="4"
+                                        Visibility="Collapsed">
+                                        <ProgressBar
+                                            x:Name="OptimizationProgressBar"
+                                            Height="4"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Value="0" />
+                                        <Grid ColumnSpacing="6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                x:Name="OptimizationProgressText"
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                FontSize="10.5"
+                                                Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                                TextTrimming="CharacterEllipsis" />
+                                            <Button
+                                                x:Name="CancelOptimizationBtn"
+                                                Grid.Column="1"
+                                                Height="22"
+                                                MinHeight="22"
+                                                Padding="8,0"
+                                                Click="OnCancelOptimizationClick"
+                                                Content="Cancelar"
+                                                FontSize="10"
+                                                Style="{StaticResource CadSegmentedButtonStyle}" />
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <cad:CadMetricTable x:Name="NestingMetricsTable" />
+                                </StackPanel>
+                            </cad:CadSectionPane>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Rodapé Fixo de Exportação 1:1 (fora do ScrollViewer) -->
+                    <Border
+                        x:Name="NestingExportFooter"
+                        Grid.Row="1"
+                        Padding="10,8"
+                        Background="{ThemeResource CmShellBackgroundBrush}"
+                        BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                        BorderThickness="0,1,0,0">
+                        <StackPanel Spacing="6">
+                            <TextBlock
+                                FontSize="10"
+                                FontWeight="SemiBold"
+                                Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                Text="EXPORTAR CHAPA EXIBIDA (1:1 MM)" />
+
+                            <Grid ColumnSpacing="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button
+                                    x:Name="ExportSvgBtn"
+                                    Grid.Column="0"
+                                    Click="OnExportSvgClick"
+                                    Content="SVG"
+                                    FontWeight="SemiBold"
+                                    Style="{StaticResource CadActionButtonStyle}" />
+                                <Button
+                                    x:Name="ExportDxfBtn"
+                                    Grid.Column="1"
+                                    Click="OnExportDxfClick"
+                                    Content="DXF R2000"
+                                    FontWeight="SemiBold"
+                                    Style="{StaticResource CadActionButtonStyle}" />
+                                <Button
+                                    x:Name="ExportPdfBtn"
+                                    Grid.Column="2"
+                                    Click="OnExportPdfClick"
+                                    Content="PDF 1.4"
+                                    FontWeight="SemiBold"
+                                    Style="{StaticResource CadActionButtonStyle}" />
+                            </Grid>
+
+                            <Button
+                                x:Name="ExportZipBtn"
+                                Height="28"
+                                HorizontalAlignment="Stretch"
+                                Click="OnExportZipClick"
+                                Content="Exportar Pacote Completo (.ZIP)"
+                                Style="{StaticResource PrimaryAccentButtonStyle}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Row 2: Barra de Status Inferior -->
+        <Border
+            Grid.Row="2"
+            Height="24"
+            Padding="10,0"
+            Background="{ThemeResource CmShellBackgroundBrush}"
+            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+            BorderThickness="0,1,0,0">
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    x:Name="NestingStatusText"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource CmUiFontFamily}"
+                    FontSize="10.5"
+                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                    Text="Pronto para otimização 2D em escala 1:1 (mm)."
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    x:Name="NestingFooterHintText"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource CmMonoFontFamily}"
+                    FontSize="10"
+                    Foreground="{ThemeResource CmTextSecondaryBrush}"
+                    Text="TRUE-SHAPE 1:1 • SVG / DXF / PDF" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

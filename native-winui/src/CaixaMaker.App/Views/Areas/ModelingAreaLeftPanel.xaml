@@ -342,6 +342,99 @@
                             ToolTipService.ToolTip="Encaixe com folga (+0.10 mm)" />
                     </Grid>
 
+                    <Rectangle
+                        Height="1"
+                        Margin="0,5,0,2"
+                        Fill="{ThemeResource CmHairlineBorderBrush}" />
+
+                    <!-- Dimensionamento Adaptativo de Encaixes (Finger Joint) -->
+                    <cad:CadPropertyRow
+                        Label="Encaixes"
+                        LabelWidth="106"
+                        ShowBottomDivider="False">
+                        <Grid ColumnSpacing="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="FingerJointAutoBtn"
+                                Grid.Column="0"
+                                Height="23"
+                                MinHeight="23"
+                                Padding="2,1"
+                                Click="OnFingerJointModeClick"
+                                Content="Auto"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="Auto"
+                                ToolTipService.ToolTip="Calcula a quantidade ideal de dentes proporcional ao MDF e a cada aresta" />
+                            <Button
+                                x:Name="FingerJointSizeBtn"
+                                Grid.Column="1"
+                                Height="23"
+                                MinHeight="23"
+                                Padding="2,1"
+                                Click="OnFingerJointModeClick"
+                                Content="Tamanho"
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="TargetSizeMm"
+                                ToolTipService.ToolTip="Adapta os dentes em cada aresta para aproximar a largura-alvo informada (mm)" />
+                            <Button
+                                x:Name="FingerJointCountBtn"
+                                Grid.Column="2"
+                                Height="23"
+                                MinHeight="23"
+                                Padding="2,1"
+                                Click="OnFingerJointModeClick"
+                                Content="Qtd."
+                                Style="{StaticResource CadSegmentedButtonStyle}"
+                                Tag="FixedCount"
+                                ToolTipService.ToolTip="Fixa a quantidade-base de espigas por aresta (com proteção para arestas curtas)" />
+                        </Grid>
+                    </cad:CadPropertyRow>
+
+                    <TextBlock
+                        x:Name="FingerJointAutoHintText"
+                        Margin="2,1,0,2"
+                        FontFamily="{StaticResource CmMonoFontFamily}"
+                        FontSize="10"
+                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                        Text="Proporcional ao MDF (~7,5 mm)"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <cad:CadPropertyRow
+                        x:Name="FingerJointTargetSizeRow"
+                        Label="Largura alvo"
+                        LabelWidth="106"
+                        ShowBottomDivider="False"
+                        Visibility="Collapsed">
+                        <cad:CadNumericInput
+                            x:Name="TargetFingerWidthInput"
+                            DecimalPlaces="1"
+                            Maximum="40"
+                            Minimum="3"
+                            Step="0.5"
+                            Unit="mm"
+                            ValueChanged="OnTargetFingerWidthChanged" />
+                    </cad:CadPropertyRow>
+
+                    <cad:CadPropertyRow
+                        x:Name="FingerJointFixedCountRow"
+                        Label="Espigas/aresta"
+                        LabelWidth="106"
+                        ShowBottomDivider="False"
+                        Visibility="Collapsed">
+                        <cad:CadNumericInput
+                            x:Name="FixedFingerCountInput"
+                            DecimalPlaces="0"
+                            Maximum="25"
+                            Minimum="2"
+                            Step="1"
+                            Unit="un"
+                            ValueChanged="OnFixedFingerCountChanged" />
+                    </cad:CadPropertyRow>
+
                     <StackPanel
                         x:Name="AdvisoriesPanel"
                         Margin="0,4,0,0"

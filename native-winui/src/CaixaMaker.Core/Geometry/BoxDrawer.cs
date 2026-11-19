@@ -277,11 +277,10 @@ public sealed class BoxDrawer
         double folga = Calc.Folga;
         double frontWidth = Calc.Width;
         double jointlessSpan = Calc.CalcJointlessSpan();
-        double verticalSpan = Calc.CalcHeightJointSpan();
         double decreasedWidth = frontWidth - 2.0 * t;
 
-        JointDivision vertical = Calc.GetJointLength(verticalSpan);
-        JointDivision horizontal = Calc.GetJointLength(decreasedWidth);
+        JointDivision vertical = Calc.GetVerticalJoints();
+        JointDivision horizontal = Calc.GetFrontBottomJoints();
 
         var path = new SvgPathBuilder(_arcSegmentsPerQuarter);
         path.MoveToAbs(StartingCoordinate + t, StartingCoordinate, svgY: StartingCoordinateInt.ToString(CultureInfo.InvariantCulture));
@@ -317,10 +316,9 @@ public sealed class BoxDrawer
         double decreasedDepth = Calc.Depth;
         double decreasedHeight = Calc.DecreasedHeight;
         double jointlessSpan = Calc.CalcJointlessSpan();
-        double verticalSpan = Calc.CalcHeightJointSpan();
 
-        JointDivision vertical = Calc.GetJointLength(verticalSpan);
-        JointDivision horizontal = Calc.GetJointLength(decreasedDepth - 2.0 * t);
+        JointDivision vertical = Calc.GetVerticalJoints();
+        JointDivision horizontal = Calc.GetSideBottomJoints();
 
         var outline = new SvgPathBuilder(_arcSegmentsPerQuarter);
         string startInt = StartingCoordinateInt.ToString(CultureInfo.InvariantCulture);
@@ -388,8 +386,8 @@ public sealed class BoxDrawer
         double t = Calc.Thickness;
         double folga = Calc.Folga;
 
-        JointDivision horizontal = Calc.GetJointLength(standardWidth - 2.0 * t);
-        JointDivision vertical = Calc.GetJointLength(standardDepth - 2.0 * t);
+        JointDivision horizontal = Calc.GetFrontBottomJoints();
+        JointDivision vertical = Calc.GetSideBottomJoints();
 
         var outline = new SvgPathBuilder(_arcSegmentsPerQuarter);
         outline.MoveToAbs(

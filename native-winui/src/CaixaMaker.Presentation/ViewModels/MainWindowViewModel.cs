@@ -36,6 +36,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public BoxWorkspaceViewModel Box { get; }
     public PersonalizationWorkspaceViewModel Personalization { get; }
     public ManufacturingWorkspaceViewModel Manufacturing { get; }
+    public NestingWorkspaceViewModel Nesting { get; }
 
     public string AppVersionText => AppVersion.Version;
     public string CompanyText => AppVersion.Company;
@@ -48,6 +49,20 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _inDesigner;
+
+    [ObservableProperty]
+    private bool _isInNestingWorkspace;
+
+    [ObservableProperty]
+    private NestingEntryOrigin _nestingOrigin = NestingEntryOrigin.Catalog;
+
+    public string NestingBackButtonLabel => NestingOrigin switch
+    {
+        NestingEntryOrigin.Modeling => "← Voltar para Modelagem",
+        NestingEntryOrigin.Personalization => "← Voltar para Personalização",
+        NestingEntryOrigin.Manufacturing => "← Voltar para Fabricação",
+        _ => "← Voltar ao Catálogo",
+    };
 
     [ObservableProperty]
     private WorkspaceArea _activeArea = WorkspaceArea.Modeling;
@@ -173,16 +188,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
         Box.SelectedModel.TotalPanels,
         Box.EstimatedCuttingAreaCm2);
 
-    public string WindowTitle => InDesigner
-        ? string.Format(
-            CultureInfo.InvariantCulture,
-            "Caixa Maker — {0} ({1:0}×{2:0}×{3:0} mm){4}",
-            ActiveModelOrProjectName,
-            Math.Round(Box.BoxWidth),
-            Math.Round(Box.BoxDepth),
-            Math.Round(Box.BoxHeight),
-            IsDirty ? " *" : string.Empty)
-        : "Caixa Maker — Catálogo de Modelos";
+    public string WindowTitle => IsInNestingWorkspace
+        ? "Caixa Maker — Otimizador de Corte 2D (Nesting)"
+        : InDesigner
+            ? string.Format(
+                CultureInfo.InvariantCulture,
+                "Caixa Maker — {0} ({1:0}×{2:0}×{3:0} mm){4}",
+                ActiveModelOrProjectName,
+                Math.Round(Box.BoxWidth),
+                Math.Round(Box.BoxDepth),
+                Math.Round(Box.BoxHeight),
+                IsDirty ? " *" : string.Empty)
+            : "Caixa Maker — Catálogo de Modelos";
 
     public string LeftPanelTitle => ActiveArea switch
     {
@@ -291,6 +308,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CurrentFolgaMm = Box.Folga,
             CurrentSheetGeometry = Box.SheetGeometry,
         };
+        Nesting = new NestingWorkspaceViewModel(
+            _paths,
+            _dialogs,
+            activeLaserBedProvider: () =>
+            {
+                LaserBedSpec bed = Manufacturing.SelectedLaserBed;
+                return bed.WidthMm >= 50.0 && bed.HeightMm >= 50.0 ? (bed.WidthMm, bed.HeightMm) : null;
+            });
 
         ApplyLoadedUiSettings();
         WireSubViewModelEvents();
@@ -1413,13 +1438,25 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 break;
 
             case DesktopCommandIds.ProjectAreaModeling:
-                if (InDesigner) SetWorkspaceArea(WorkspaceArea.Modeling);
+                if (InDesigner)
+                {
+                    IsInNestingWorkspace = false;
+                    SetWorkspaceArea(WorkspaceArea.Modeling);
+                }
                 break;
             case DesktopCommandIds.ProjectAreaPersonalization:
-                if (InDesigner) SetWorkspaceArea(WorkspaceArea.Personalization);
+                if (InDesigner)
+                {
+                    IsInNestingWorkspace = false;
+                    SetWorkspaceArea(WorkspaceArea.Personalization);
+                }
                 break;
             case DesktopCommandIds.ProjectAreaFabrication:
-                if (InDesigner) SetWorkspaceArea(WorkspaceArea.Fabrication);
+                if (InDesigner)
+                {
+                    IsInNestingWorkspace = false;
+                    SetWorkspaceArea(WorkspaceArea.Fabrication);
+                }
                 break;
             case DesktopCommandIds.ProjectToggleExploded:
                 if (InDesigner) Box.ToggleExplodedView();
@@ -1491,6 +1528,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 }
                 break;
 
+            case DesktopCommandIds.ToolsNesting:
+                OpenNestingIndependent();
+                break;
             case DesktopCommandIds.ToolsExportSvg:
                 await ExportVectorFileAsync(VectorExportFormat.Svg, argument);
                 break;
@@ -1824,6 +1864,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     partial void OnInDesignerChanged(bool value)
     {
+        Nesting.HasActiveBoxProject = value;
+        if (value && IsInNestingWorkspace && NestingOrigin == NestingEntryOrigin.Catalog)
+        {
+            IsInNestingWorkspace = false;
+        }
         NotifyWorkspaceWorkflowProperties();
         NotifyTitleAndMenus();
     }
@@ -1928,6 +1973,98 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     partial void OnSavedProjectNameChanged(string? value) => NotifyTitleAndMenus();
     partial void OnIsDirtyChanged(bool value) => NotifyTitleAndMenus();
+    partial void OnIsInNestingWorkspaceChanged(bool value) => NotifyTitleAndMenus();
+    partial void OnNestingOriginChanged(NestingEntryOrigin value) => OnPropertyChanged(nameof(NestingBackButtonLabel));
+
+    [RelayCommand]
+    public void OpenNestingFromCatalog()
+    {
+        NestingOrigin = NestingEntryOrigin.Catalog;
+        Nesting.HasActiveBoxProject = InDesigner;
+        IsInNestingWorkspace = true;
+        StatusMessage = "Otimizador de Corte 2D (Nesting) aberto em modo independente.";
+    }
+
+    [RelayCommand]
+    public void OpenNestingIndependent()
+    {
+        NestingOrigin = !InDesigner
+            ? NestingEntryOrigin.Catalog
+            : ActiveArea switch
+            {
+                WorkspaceArea.Modeling => NestingEntryOrigin.Modeling,
+                WorkspaceArea.Personalization => NestingEntryOrigin.Personalization,
+                WorkspaceArea.Fabrication => NestingEntryOrigin.Manufacturing,
+                _ => NestingEntryOrigin.Catalog,
+            };
+        Nesting.HasActiveBoxProject = InDesigner;
+        IsInNestingWorkspace = true;
+        StatusMessage = "Otimizador de Corte 2D (Nesting) aberto em modo independente.";
+    }
+
+    [RelayCommand]
+    public async Task OpenNestingFromManufacturingAsync()
+    {
+        NestingOrigin = NestingEntryOrigin.Manufacturing;
+        LaserBedSpec bed = Manufacturing.SelectedLaserBed;
+        if (bed.WidthMm >= 50.0 && bed.HeightMm >= 50.0)
+        {
+            Nesting.SheetWidthMm = bed.WidthMm;
+            Nesting.SheetHeightMm = bed.HeightMm;
+        }
+
+        Nesting.LoadActiveBoxPanels(
+            Box.SelectedModel,
+            Box.CurrentParameters,
+            Personalization.Manager,
+            replaceExistingBoxParts: true);
+
+        IsInNestingWorkspace = true;
+        StatusMessage = "Chapas da caixa enviadas ao Otimizador de Corte 2D (Nesting).";
+        await Nesting.RunOptimizationAsync();
+    }
+
+    [RelayCommand]
+    public void LoadActiveBoxIntoNesting()
+    {
+        if (!InDesigner)
+        {
+            return;
+        }
+
+        Nesting.LoadActiveBoxPanels(
+            Box.SelectedModel,
+            Box.CurrentParameters,
+            Personalization.Manager,
+            replaceExistingBoxParts: true);
+    }
+
+    [RelayCommand]
+    public void ReturnFromNesting()
+    {
+        IsInNestingWorkspace = false;
+        switch (NestingOrigin)
+        {
+            case NestingEntryOrigin.Modeling:
+                InDesigner = true;
+                ActiveArea = WorkspaceArea.Modeling;
+                StatusMessage = "Retornou para a Etapa 1: Modelagem Paramétrica.";
+                break;
+            case NestingEntryOrigin.Personalization:
+                InDesigner = true;
+                ActiveArea = WorkspaceArea.Personalization;
+                StatusMessage = "Retornou para a Etapa 2: Personalização CNC.";
+                break;
+            case NestingEntryOrigin.Manufacturing:
+                InDesigner = true;
+                ActiveArea = WorkspaceArea.Fabrication;
+                StatusMessage = "Retornou para a Etapa 3: Fabricação e Exportação CAM.";
+                break;
+            default:
+                StatusMessage = "Retornou para a Central de Trabalho.";
+                break;
+        }
+    }
 
     private void NotifyTitleAndMenus()
     {

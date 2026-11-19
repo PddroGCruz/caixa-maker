@@ -875,6 +875,9 @@ public sealed partial class CatalogHomeView : UserControl
         await _vm.DispatchCommandAsync(DesktopCommandIds.HelpShortcuts);
     }
 
+    private void OnOpenNestingFromCatalogClick(object sender, RoutedEventArgs e)
+        => _vm?.OpenNestingFromCatalog();
+
     private async void OnOpenInstitutionAboutClick(object sender, RoutedEventArgs e)
     {
         if (_vm is null) return;

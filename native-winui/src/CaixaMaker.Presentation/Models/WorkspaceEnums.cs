@@ -59,6 +59,15 @@ public enum QuickAlignmentPreset
     AlignBottom,
 }
 
+/// <summary>Origem da navegação para a tela dedicada do Otimizador de Corte 2D (Nesting).</summary>
+public enum NestingEntryOrigin
+{
+    Catalog,
+    Modeling,
+    Personalization,
+    Manufacturing,
+}
+
 /// <summary>Decisão do usuário diante de fechamento ou navegação com alterações não salvas.</summary>
 public enum UnsavedChangesDecision
 {

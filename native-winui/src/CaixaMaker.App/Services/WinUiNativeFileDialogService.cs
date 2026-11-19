@@ -62,6 +62,45 @@ public sealed class WinUiNativeFileDialogService : INativeFileDialogService
         return file?.Path;
     }
 
+    public async Task<IReadOnlyList<string>> PickOpenFilesAsync(string title, IReadOnlyList<NativeFileFilter> filters)
+    {
+        if (_ownerWindow is null) return Array.Empty<string>();
+        var picker = new FileOpenPicker
+        {
+            ViewMode = PickerViewMode.List,
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+        };
+
+        InitializeWithWindow.Initialize(picker, WindowHandle);
+
+        bool anyFilter = false;
+        foreach (NativeFileFilter filter in filters)
+        {
+            foreach (string ext in filter.Extensions)
+            {
+                string dotExt = ext.StartsWith('.') ? ext : "." + ext;
+                picker.FileTypeFilter.Add(dotExt);
+                anyFilter = true;
+            }
+        }
+
+        if (!anyFilter)
+        {
+            picker.FileTypeFilter.Add("*");
+        }
+
+        IReadOnlyList<StorageFile>? files = await picker.PickMultipleFilesAsync();
+        if (files is null || files.Count == 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        return files
+            .Select(f => f.Path)
+            .Where(p => !string.IsNullOrWhiteSpace(p))
+            .ToArray();
+    }
+
     public async Task<string?> PickSaveFileAsync(
         string title,
         string suggestedFileName,

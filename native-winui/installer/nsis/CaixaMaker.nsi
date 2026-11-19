@@ -11,10 +11,10 @@ SetCompressor /SOLID lzma
 !include "x64.nsh"
 
 !ifndef VERSION
-  !define VERSION "2.3.0"
+  !define VERSION "2.4.0"
 !endif
 !ifndef BINARY_VERSION
-  !define BINARY_VERSION "2.3.0.0"
+  !define BINARY_VERSION "2.4.0.0"
 !endif
 !ifndef PAYLOAD_DIR
   !define PAYLOAD_DIR "..\..\artifacts\publish\win-x64"

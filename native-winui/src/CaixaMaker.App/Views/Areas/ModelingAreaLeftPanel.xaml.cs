@@ -36,7 +36,17 @@ public sealed partial class ModelingAreaLeftPanel : UserControl
 
     private void WireInteractiveInputs()
     {
-        CadNumericInput[] inputs = [ThicknessInput, WidthInput, DepthInput, HeightInput, FolgaInput, LidAngleInput];
+        CadNumericInput[] inputs =
+        [
+            ThicknessInput,
+            WidthInput,
+            DepthInput,
+            HeightInput,
+            FolgaInput,
+            TargetFingerWidthInput,
+            FixedFingerCountInput,
+            LidAngleInput,
+        ];
         foreach (CadNumericInput input in inputs)
         {
             input.InteractionStarted += (_, _) => _vm?.BeginInteractiveUpdate();
@@ -143,6 +153,16 @@ public sealed partial class ModelingAreaLeftPanel : UserControl
             ApplySegmentedHighlight(FolgaTightBtn, Approx(_vm.Folga, -0.10));
             ApplySegmentedHighlight(FolgaZeroBtn, Approx(_vm.Folga, 0.00));
             ApplySegmentedHighlight(FolgaLooseBtn, Approx(_vm.Folga, 0.10));
+
+            ApplySegmentedHighlight(FingerJointAutoBtn, _vm.IsFingerJointAutoMode);
+            ApplySegmentedHighlight(FingerJointSizeBtn, _vm.IsFingerJointTargetSizeVisible);
+            ApplySegmentedHighlight(FingerJointCountBtn, _vm.IsFingerJointFixedCountVisible);
+            FingerJointAutoHintText.Visibility = _vm.IsFingerJointAutoMode ? Visibility.Visible : Visibility.Collapsed;
+            FingerJointAutoHintText.Text = _vm.FingerJointAutoHintText;
+            FingerJointTargetSizeRow.Visibility = _vm.IsFingerJointTargetSizeVisible ? Visibility.Visible : Visibility.Collapsed;
+            FingerJointFixedCountRow.Visibility = _vm.IsFingerJointFixedCountVisible ? Visibility.Visible : Visibility.Collapsed;
+            TargetFingerWidthInput.Value = _vm.TargetFingerWidthMm;
+            FixedFingerCountInput.Value = _vm.FixedFingerCount;
 
             ApplySegmentedHighlight(Lid0Btn, Approx(_vm.LidAngle, 0.0));
             ApplySegmentedHighlight(Lid45Btn, Approx(_vm.LidAngle, 45.0));
@@ -322,6 +342,27 @@ public sealed partial class ModelingAreaLeftPanel : UserControl
     {
         if (_syncing || _vm is null) return;
         _vm.Folga = value;
+    }
+
+    private void OnFingerJointModeClick(object sender, RoutedEventArgs e)
+    {
+        if (_vm is null || sender is not Button btn || btn.Tag is not string raw) return;
+        if (Enum.TryParse<FingerJointSizingMode>(raw, ignoreCase: true, out FingerJointSizingMode mode))
+        {
+            _vm.SetFingerJointMode(mode);
+        }
+    }
+
+    private void OnTargetFingerWidthChanged(object? sender, double value)
+    {
+        if (_syncing || _vm is null) return;
+        _vm.TargetFingerWidthMm = value;
+    }
+
+    private void OnFixedFingerCountChanged(object? sender, double value)
+    {
+        if (_syncing || _vm is null) return;
+        _vm.FixedFingerCount = Math.Clamp((int)Math.Round(value), BoxParameters.MinFixedFingerCount, BoxParameters.MaxFixedFingerCount);
     }
 
     private void OnLidAngleChanged(object? sender, double value)

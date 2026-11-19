@@ -72,9 +72,9 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
 
         return new JointsSummary
         {
-            Vertical = BuildJointSpec(calc, verticalSpan),
-            FrontBottom = BuildJointSpec(calc, decreasedWidth),
-            SideBottom = BuildJointSpec(calc, decreasedDepthInner),
+            Vertical = BuildJointSpec(calc, calc.GetVerticalJoints(), verticalSpan),
+            FrontBottom = BuildJointSpec(calc, calc.GetFrontBottomJoints(), decreasedWidth),
+            SideBottom = BuildJointSpec(calc, calc.GetSideBottomJoints(), decreasedDepthInner),
         };
     }
 
@@ -92,6 +92,10 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
         double d = calc.Depth;
         double h = calc.Height;
         double sideDepth = layout.SideWidth;
+
+        JointDivision verticalJ = calc.GetVerticalJoints();
+        JointDivision frontBaseJ = calc.GetFrontBottomJoints();
+        JointDivision sideBaseJ = calc.GetSideBottomJoints();
 
         return new ComputedDimensionsSummary
         {
@@ -112,6 +116,12 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
             HingeHoleRadius = HasHandles ? PythonMath.Round(t * BoxDrawer.HoleFactor, 4) : null,
             LidWidth = HasLid && layout.LidDepth.HasValue ? PythonMath.Round(calc.IncreasedWidth, 4) : null,
             LidDepth = HasLid && layout.LidDepth.HasValue ? PythonMath.Round(layout.LidDepth.Value, 4) : null,
+            VerticalFingerWidthMm = PythonMath.Round(calc.CalcTabLength(verticalJ.ActualLength), 4),
+            BaseFrontFingerWidthMm = PythonMath.Round(calc.CalcTabLength(frontBaseJ.ActualLength), 4),
+            BaseSideFingerWidthMm = PythonMath.Round(calc.CalcTabLength(sideBaseJ.ActualLength), 4),
+            VerticalFingerCount = verticalJ.Count,
+            BaseFrontFingerCount = frontBaseJ.Count / 2,
+            BaseSideFingerCount = sideBaseJ.Count / 2,
         };
     }
 
@@ -128,6 +138,18 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
         {
             warnings.Add(
                 "Os dentes verticais ficaram abaixo de 3,0 mm devido à altura reduzida em relação à espessura.");
+        }
+
+        if (joints.FrontBottom.SegmentLengthMm < 3.0 || joints.SideBottom.SegmentLengthMm < 3.0)
+        {
+            warnings.Add(
+                "Os dentes da base ficaram abaixo de 3,0 mm devido às dimensões reduzidas da caixa.");
+        }
+
+        if (joints.Vertical.WasReducedByLimit || joints.FrontBottom.WasReducedByLimit || joints.SideBottom.WasReducedByLimit)
+        {
+            warnings.Add(
+                "A quantidade fixa de espigas foi reduzida automaticamente em uma ou mais arestas curtas para manter o mínimo estrutural (≥ 3,0 mm).");
         }
 
         double folgaVal = calc.Folga;
@@ -248,9 +270,8 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
         };
     }
 
-    protected static JointSpec BuildJointSpec(BoxCalculator calc, double availableSpan)
+    protected static JointSpec BuildJointSpec(BoxCalculator calc, JointDivision division, double availableSpan)
     {
-        JointDivision division = calc.GetJointLength(availableSpan);
         int tabCount = division.Count / 2;
         int slotCount = division.Count - tabCount;
 
@@ -263,6 +284,7 @@ public abstract class BoxModelDefinitionBase : IBoxModelDefinition
             TabCount = tabCount,
             SlotCount = slotCount,
             AvailableSpanMm = PythonMath.Round(availableSpan, 4),
+            WasReducedByLimit = division.WasReducedByLimit,
         };
     }
 

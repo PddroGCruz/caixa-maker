@@ -16,7 +16,7 @@ public sealed class AppVersionTests
         string expectedRootVersion = AppVersion.ReadVersionFromFile(versionFile!);
 
         AppVersion.Version.Should().Be(expectedRootVersion);
-        AppVersion.Version.Should().Be("2.3.0");
+        AppVersion.Version.Should().Be("2.4.0");
         AppVersion.IsValidSemVer(AppVersion.Version).Should().BeTrue();
         AppVersion.ProductName.Should().Be("Caixa Maker");
         AppVersion.Company.Should().Be("Laboratório IFMaker do Juruá — IFAC Campus Cruzeiro do Sul");

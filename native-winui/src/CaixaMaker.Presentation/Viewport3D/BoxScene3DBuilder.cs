@@ -21,7 +21,10 @@ public static class BoxScene3DBuilder
         double DepthMm,
         double HeightMm,
         double ThicknessMm,
-        double FolgaMm);
+        double FolgaMm,
+        int VerticalJointCount,
+        int FrontBottomJointCount,
+        int SideBottomJointCount);
 
     private sealed record CachedLocalPanelMesh(
         SurfaceId SurfaceId,
@@ -230,7 +233,10 @@ public static class BoxScene3DBuilder
             calc.Depth,
             calc.Height,
             calc.Thickness,
-            calc.Folga);
+            calc.Folga,
+            calc.GetVerticalJoints().Count,
+            calc.GetFrontBottomJoints().Count,
+            calc.GetSideBottomJoints().Count);
 
         lock (_localMeshCacheLock)
         {

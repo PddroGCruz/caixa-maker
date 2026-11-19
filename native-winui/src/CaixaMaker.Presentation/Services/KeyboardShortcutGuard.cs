@@ -75,6 +75,7 @@ public static class DesktopCommandIds
     public const string ToolDrawCrosshair = "tool.draw_crosshair";
     public const string ToolCancel = "tool.cancel";
 
+    public const string ToolsNesting = "tools.nesting";
     public const string ToolsExportSvg = "tools.export_svg";
     public const string ToolsExportDxf = "tools.export_dxf";
     public const string ToolsExportPdf = "tools.export_pdf";
@@ -176,6 +177,7 @@ public static class KeyboardShortcutGuard
         new("Visualização e Áreas", "Alt + 1", "Ir para área Modelagem", "Designer"),
         new("Visualização e Áreas", "Alt + 2", "Ir para área Personalização", "Designer"),
         new("Visualização e Áreas", "Alt + 3", "Ir para área Fabricação", "Designer"),
+        new("Visualização e Áreas", "Alt + 4", "Abrir Otimizador de Corte 2D (SVG / DXF / Nesting)", "Global"),
         new("Visualização e Áreas", "Ctrl + 1 / 2 / 3", "Alternar viewport 3D / 2D / Dividido", "Designer"),
         new("Visualização e Áreas", "Ctrl + B", "Alternar painel esquerdo", "Designer"),
         new("Visualização e Áreas", "Ctrl + Shift + B", "Alternar painel direito", "Designer"),

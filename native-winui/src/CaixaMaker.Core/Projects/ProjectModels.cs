@@ -27,6 +27,15 @@ public sealed class ProjectBoxParameters
     [JsonPropertyName("folga")]
     public double? Folga { get; set; }
 
+    [JsonPropertyName("finger_joint_mode")]
+    public string? FingerJointMode { get; set; }
+
+    [JsonPropertyName("target_finger_width_mm")]
+    public double? TargetFingerWidthMm { get; set; }
+
+    [JsonPropertyName("fixed_finger_count")]
+    public int? FixedFingerCount { get; set; }
+
     [JsonExtensionData]
     public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 
@@ -40,6 +49,9 @@ public sealed class ProjectBoxParameters
             BoxDepth = PythonMath.Round(parameters.BoxDepth, 4),
             BoxHeight = PythonMath.Round(parameters.BoxHeight, 4),
             Folga = PythonMath.Round(parameters.Folga, 4),
+            FingerJointMode = FormatFingerJointMode(parameters.FingerJointMode),
+            TargetFingerWidthMm = PythonMath.Round(parameters.TargetFingerWidthMm, 4),
+            FixedFingerCount = parameters.FixedFingerCount,
         };
     }
 
@@ -53,6 +65,9 @@ public sealed class ProjectBoxParameters
             BoxDepth = PythonMath.Round(calc.Depth, 4),
             BoxHeight = PythonMath.Round(calc.Height, 4),
             Folga = PythonMath.Round(calc.Folga, 4),
+            FingerJointMode = FormatFingerJointMode(calc.FingerJointMode),
+            TargetFingerWidthMm = PythonMath.Round(calc.TargetFingerWidthMm, 4),
+            FixedFingerCount = calc.FixedFingerCount,
         };
     }
 
@@ -65,6 +80,37 @@ public sealed class ProjectBoxParameters
             BoxDepth = ResolveDouble(BoxDepth, "depth_mm", BoxParameters.DefaultDepth),
             BoxHeight = ResolveDouble(BoxHeight, "height_mm", BoxParameters.DefaultHeight),
             Folga = ResolveDouble(Folga, "folga_mm", BoxParameters.DefaultFolga),
+            FingerJointMode = ParseFingerJointMode(FingerJointMode),
+            TargetFingerWidthMm = Math.Clamp(
+                ResolveDouble(TargetFingerWidthMm, "target_finger_width_mm", BoxParameters.DefaultTargetFingerWidthMm),
+                BoxParameters.MinTargetFingerWidthMm,
+                BoxParameters.MaxTargetFingerWidthMm),
+            FixedFingerCount = Math.Clamp(
+                FixedFingerCount ?? BoxParameters.DefaultFixedFingerCount,
+                BoxParameters.MinFixedFingerCount,
+                BoxParameters.MaxFixedFingerCount),
+        };
+    }
+
+    public static string FormatFingerJointMode(FingerJointSizingMode mode) => mode switch
+    {
+        FingerJointSizingMode.TargetSizeMm => "target_size_mm",
+        FingerJointSizingMode.FixedCount => "fixed_count",
+        _ => "auto",
+    };
+
+    public static FingerJointSizingMode ParseFingerJointMode(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return BoxParameters.DefaultFingerJointMode;
+        }
+
+        return raw.Trim().ToLowerInvariant() switch
+        {
+            "target_size_mm" or "targetsizemm" or "target_size" => FingerJointSizingMode.TargetSizeMm,
+            "fixed_count" or "fixedcount" or "fixed" => FingerJointSizingMode.FixedCount,
+            _ => FingerJointSizingMode.Auto,
         };
     }
 

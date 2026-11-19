@@ -59,11 +59,11 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
     {
         string repoRoot = ResolveRepoRoot();
         string rootVersion = AppVersion.ReadVersionFromFile(Path.Combine(repoRoot, "VERSION"));
-        rootVersion.Should().Be("2.3.0");
+        rootVersion.Should().Be("2.4.0");
 
-        AppVersion.Version.Should().Be("2.3.0");
-        AppVersion.AssemblyVersion.Should().Be("2.3.0.0");
-        AppVersion.FileVersion.Should().Be("2.3.0.0");
+        AppVersion.Version.Should().Be("2.4.0");
+        AppVersion.AssemblyVersion.Should().Be("2.4.0.0");
+        AppVersion.FileVersion.Should().Be("2.4.0.0");
 
         Assembly coreAsm = typeof(AppVersion).Assembly;
         string? company = coreAsm.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
@@ -71,7 +71,7 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
         string? description = coreAsm.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
         string? infoVer = coreAsm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
-        infoVer.Should().Be("2.3.0");
+        infoVer.Should().Be("2.4.0");
         company.Should().Be("Laboratório IFMaker do Juruá — IFAC Campus Cruzeiro do Sul");
         copyright.Should().Contain("Laboratório IFMaker do Juruá").And.Contain("Pedro G. Cruz").And.Contain("PddroGCruz").And.NotContain("pddrogcruz");
         description.Should().Contain("IFMaker do Juruá").And.Contain("PddroGCruz");
@@ -80,10 +80,10 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
         XDocument props = XDocument.Load(propsPath);
         XElement? pg = props.Root?.Element("PropertyGroup");
         pg.Should().NotBeNull();
-        pg!.Element("Version")?.Value.Should().Be("2.3.0");
-        pg.Element("AssemblyVersion")?.Value.Should().Be("2.3.0.0");
-        pg.Element("FileVersion")?.Value.Should().Be("2.3.0.0");
-        pg.Element("InformationalVersion")?.Value.Should().Be("2.3.0");
+        pg!.Element("Version")?.Value.Should().Be("2.4.0");
+        pg.Element("AssemblyVersion")?.Value.Should().Be("2.4.0.0");
+        pg.Element("FileVersion")?.Value.Should().Be("2.4.0.0");
+        pg.Element("InformationalVersion")?.Value.Should().Be("2.4.0");
         pg.Element("Company")?.Value.Should().Be("Laboratório IFMaker do Juruá — IFAC Campus Cruzeiro do Sul");
         pg.Element("Authors")?.Value.Should().Contain("Pedro G. Cruz").And.Contain("PddroGCruz").And.Contain("ggcostcr@gmail.com").And.NotContain("pddrogcruz");
         pg.Element("Copyright")?.Value.Should().Contain("Laboratório IFMaker do Juruá").And.Contain("Pedro G. Cruz").And.Contain("PddroGCruz").And.NotContain("pddrogcruz");
@@ -94,7 +94,7 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
             BoxModelRegistry.Default,
             ResolvedAppTheme.Dark);
 
-        vm.AppVersionText.Should().Be("2.3.0");
+        vm.AppVersionText.Should().Be("2.4.0");
         vm.DeveloperNameText.Should().Be("Pedro G. Cruz (PddroGCruz)");
         vm.DeveloperEmailText.Should().Be("ggcostcr@gmail.com");
     }
@@ -124,15 +124,15 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
         }
 
         string catalogXaml = File.ReadAllText(Path.Combine(appDir, "Views", "CatalogHomeView.xaml"));
-        catalogXaml.Should().Contain("Text=\"v2.3.0\"");
-        catalogXaml.Should().NotContain("v2.2.0");
+        catalogXaml.Should().Contain("Text=\"v2.4.0\"");
+        catalogXaml.Should().NotContain("v2.3.0");
 
         string shellXaml = File.ReadAllText(Path.Combine(appDir, "Views", "WorkspaceSplitShell.xaml"));
-        shellXaml.Should().Contain("Text=\"v2.3.0\"");
-        shellXaml.Should().NotContain("v2.2.0");
+        shellXaml.Should().Contain("Text=\"v2.4.0\"");
+        shellXaml.Should().NotContain("v2.3.0");
 
         string manifest = File.ReadAllText(Path.Combine(appDir, "app.manifest"));
-        manifest.Should().Contain("version=\"2.3.0.0\"");
+        manifest.Should().Contain("version=\"2.4.0.0\"");
     }
 
     [Fact]
@@ -160,14 +160,14 @@ public sealed class Stage200VersionAndDeveloperCreditsTests : IDisposable
         catalogXaml.Should().NotContain("ggcostcr@gmail.com");
 
         string nsisScript = File.ReadAllText(Path.Combine(repoRoot, "native-winui", "installer", "nsis", "CaixaMaker.nsi"));
-        nsisScript.Should().Contain("!define VERSION \"2.3.0\"");
-        nsisScript.Should().Contain("!define BINARY_VERSION \"2.3.0.0\"");
+        nsisScript.Should().Contain("!define VERSION \"2.4.0\"");
+        nsisScript.Should().Contain("!define BINARY_VERSION \"2.4.0.0\"");
         nsisScript.Should().Contain("!define PRODUCT_PUBLISHER \"Laboratório IFMaker do Juruá — IFAC\"");
         nsisScript.Should().Contain("Pedro G. Cruz (PddroGCruz • ggcostcr@gmail.com)");
         nsisScript.Should().NotContain("pddrogcruz");
 
         string wxsProduct = File.ReadAllText(Path.Combine(repoRoot, "native-winui", "installer", "wix", "Product.wxs"));
-        wxsProduct.Should().Contain("<?define Version = \"2.3.0\" ?>");
+        wxsProduct.Should().Contain("<?define Version = \"2.4.0\" ?>");
         wxsProduct.Should().Contain("Manufacturer=\"Laboratório IFMaker do Juruá — IFAC\"");
         wxsProduct.Should().Contain("Pedro G. Cruz (PddroGCruz • ggcostcr@gmail.com)");
         wxsProduct.Should().NotContain("pddrogcruz");

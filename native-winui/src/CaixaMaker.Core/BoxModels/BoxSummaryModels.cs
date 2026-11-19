@@ -28,6 +28,7 @@ public sealed record JointSpec
     public required int TabCount { get; init; }
     public required int SlotCount { get; init; }
     public required double AvailableSpanMm { get; init; }
+    public bool WasReducedByLimit { get; init; }
 }
 
 /// <summary>Agrupamento dos três grupos de encaixe da caixa.</summary>
@@ -73,6 +74,12 @@ public sealed record ComputedDimensionsSummary
     public double? HingeHoleRadius { get; init; }
     public double? LidWidth { get; init; }
     public double? LidDepth { get; init; }
+    public double VerticalFingerWidthMm { get; init; }
+    public double BaseFrontFingerWidthMm { get; init; }
+    public double BaseSideFingerWidthMm { get; init; }
+    public int VerticalFingerCount { get; init; }
+    public int BaseFrontFingerCount { get; init; }
+    public int BaseSideFingerCount { get; init; }
 }
 
 /// <summary>Dimensões totais da folha SVG gerada em milímetros.</summary>

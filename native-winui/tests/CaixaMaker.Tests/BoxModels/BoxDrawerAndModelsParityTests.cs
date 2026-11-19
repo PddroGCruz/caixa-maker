@@ -74,6 +74,8 @@ public sealed class BoxDrawerAndModelsParityTests
             BoxDepth = depth,
             BoxHeight = height,
             Folga = folga,
+            FingerJointMode = FingerJointSizingMode.FixedCount,
+            FixedFingerCount = 5,
         };
 
         string svg = model.DrawBoxSvg(parameters);
@@ -86,7 +88,11 @@ public sealed class BoxDrawerAndModelsParityTests
     public void BoxWithLidAndHandles_SummaryAndInMemoryGeometry_MatchPythonExactValues()
     {
         IBoxModelDefinition model = BoxModelRegistry.Default.Get(BoxWithLidAndHandlesModel.Id);
-        BoxParameters parameters = BoxParameters.Default;
+        BoxParameters parameters = BoxParameters.Default with
+        {
+            FingerJointMode = FingerJointSizingMode.FixedCount,
+            FixedFingerCount = 5,
+        };
 
         BoxCalculationSummary summary = model.BuildSummary(parameters);
         summary.ComputedDimensions.InnerWidth.Should().BeApproximately(194.0, ToleranceMm);
@@ -162,7 +168,11 @@ public sealed class BoxDrawerAndModelsParityTests
     public void OpenBox_SummaryAndInMemoryGeometry_ExcludeLidAndHingeEars()
     {
         IBoxModelDefinition model = BoxModelRegistry.Default.Get(OpenBoxModel.Id);
-        BoxParameters parameters = BoxParameters.Default;
+        BoxParameters parameters = BoxParameters.Default with
+        {
+            FingerJointMode = FingerJointSizingMode.FixedCount,
+            FixedFingerCount = 5,
+        };
 
         BoxCalculationSummary summary = model.BuildSummary(parameters);
         summary.ComputedDimensions.OuterDepthWithHinge.Should().BeApproximately(156.0, ToleranceMm);

@@ -4,6 +4,22 @@ Todas as alterações relevantes do **Caixa Maker** (aplicação Web e Desktop W
 
 ---
 
+## [2.4.0] - 2026-11-18
+
+### Adicionado (v2.4.0 — Otimizador de Corte 2D True-Shape Nesting, Importadores DXF/SVG e Lote Integrado)
+- **Motor Nativo de Otimização de Corte 2D (*True-Shape Nesting*) (Stage 27):**
+  - Implementado `TrueShapeNestingEngine` determinístico multi-estratégia (`AreaDescending`, `MaxDimensionDescending`, `BoundingAreaDescending`) com encaixe em concavidades reais, suporte a alocação de peças menores dentro de furos internos fechados (`AllowNestingInHoles`), políticas de rotação (`Locked0`, `Step180`, `Step90`, `Step45`), folga mínima configurável entre cortes (`PartSpacingMm`) e distribuição automática multi-chapa para aproveitamento de retalhos.
+- **Importadores 1:1 (DXF & SVG), Adaptador em Memória da Caixa e Exportador 1:1 (Stage 27):**
+  - Criado leitor nativo ASCII DXF (`DxfImporter`) com conversão automática de `$INSUNITS` para milímetros, suporte a `LINE`, `LWPOLYLINE` (com *bulge*), `POLYLINE`/`VERTEX`/`SEQEND`, `CIRCLE`, `ARC`, `ELLIPSE` e `SPLINE` (De Boor), costura automática de contornos abertos (`<= 0,05 mm`) e agrupamento hierárquico Ponto-em-Polígono de peças, furos internos e gravações.
+  - Adicionados `SvgNestingImporter` 1:1, `BoxPanelNestingAdapter` (extração direta em memória chapa por chapa com personalizações, zero exportação intermediária) e `NestingSheetExporter` para exportação 1:1 em **SVG**, **DXF R2000 (`AC1015`)**, **PDF 1.4** e pacote `.ZIP` multi-chapa nas 6 layers semânticas CAM + layer auxiliar `SHEET_BOUNDS`.
+- **Interface Dedicada "Otimizador de Corte 2D (Nesting)" (Stage 28):**
+  - Nova tela dedicada `NestingWorkspaceView` em 3 colunas com fila de peças (`NestingWorkspaceViewModel`), multiplicador de lote da caixa ativa (`BoxCopiesCount`), mistura com arquivos SVG/DXF externos, presets rápidos de retalho/mesa laser ativa, renderizador SkiaSharp com cache vetorial `NestingSheetStaticCache` (pan/zoom a 60+ FPS), execução assíncrona cancelável e duplo ponto de acesso (Catálogo para uso independente e Etapa 3 de Fabricação para uso integrado preservando os caches do projeto).
+- **Dimensionamento Adaptativo Unificado de Encaixes (*Finger Joints*) (Stage 29):**
+  - Adicionados os modos `Auto` (padrão proporcional à espessura do MDF e ao comprimento útil de cada aresta), `Tamanho` (`TargetSizeMm`, `3,0` a `40,0 mm`) e `Qtd.` (`FixedCount`, `2` a `25` espigas com redução de segurança em arestas curtas) em `BoxParameters`, `BoxCalculator`, `BoxDrawer` e persistência retrocompatível `.cmaker`.
+  - Controle segmentado compacto `Auto | Tamanho | Qtd.` integrado à seção `MATERIAL E AJUSTE CNC (KERF)` no `ModelingAreaLeftPanel` e resumo detalhado com largura efetiva dos dentes da base no `ModelingAreaRightPanel`.
+
+---
+
 ## [2.3.0] - 2026-11-18
 
 ### Adicionado (v2.3.0 — Fluxo de Trabalho Guiado: Stepper 1 → 2 → 3 e Navegação Contextual)

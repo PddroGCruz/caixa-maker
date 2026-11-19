@@ -53,6 +53,15 @@ public sealed class PersonalizationBoxParametersSnapshot
     [JsonPropertyName("folga_mm")]
     public double? FolgaMm { get; set; }
 
+    [JsonPropertyName("finger_joint_mode")]
+    public string? FingerJointMode { get; set; }
+
+    [JsonPropertyName("target_finger_width_mm")]
+    public double? TargetFingerWidthMm { get; set; }
+
+    [JsonPropertyName("fixed_finger_count")]
+    public int? FixedFingerCount { get; set; }
+
     [JsonExtensionData]
     public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 
@@ -66,6 +75,9 @@ public sealed class PersonalizationBoxParametersSnapshot
             HeightMm = PythonMath.Round(calc.Height, 4),
             ThicknessMm = PythonMath.Round(calc.Thickness, 4),
             FolgaMm = PythonMath.Round(calc.Folga, 4),
+            FingerJointMode = CaixaMaker.Core.Projects.ProjectBoxParameters.FormatFingerJointMode(calc.FingerJointMode),
+            TargetFingerWidthMm = PythonMath.Round(calc.TargetFingerWidthMm, 4),
+            FixedFingerCount = calc.FixedFingerCount,
         };
     }
 
@@ -79,6 +91,9 @@ public sealed class PersonalizationBoxParametersSnapshot
             HeightMm = PythonMath.Round(parameters.BoxHeight, 4),
             ThicknessMm = PythonMath.Round(parameters.BoxThickness, 4),
             FolgaMm = PythonMath.Round(parameters.Folga, 4),
+            FingerJointMode = CaixaMaker.Core.Projects.ProjectBoxParameters.FormatFingerJointMode(parameters.FingerJointMode),
+            TargetFingerWidthMm = PythonMath.Round(parameters.TargetFingerWidthMm, 4),
+            FixedFingerCount = parameters.FixedFingerCount,
         };
     }
 
@@ -91,6 +106,15 @@ public sealed class PersonalizationBoxParametersSnapshot
             BoxDepth = ResolveDouble(DepthMm, "box_depth", BoxParameters.DefaultDepth),
             BoxHeight = ResolveDouble(HeightMm, "box_height", BoxParameters.DefaultHeight),
             Folga = ResolveDouble(FolgaMm, "folga", BoxParameters.DefaultFolga),
+            FingerJointMode = CaixaMaker.Core.Projects.ProjectBoxParameters.ParseFingerJointMode(FingerJointMode),
+            TargetFingerWidthMm = Math.Clamp(
+                ResolveDouble(TargetFingerWidthMm, "target_finger_width_mm", BoxParameters.DefaultTargetFingerWidthMm),
+                BoxParameters.MinTargetFingerWidthMm,
+                BoxParameters.MaxTargetFingerWidthMm),
+            FixedFingerCount = Math.Clamp(
+                FixedFingerCount ?? BoxParameters.DefaultFixedFingerCount,
+                BoxParameters.MinFixedFingerCount,
+                BoxParameters.MaxFixedFingerCount),
         };
     }
 
@@ -99,7 +123,7 @@ public sealed class PersonalizationBoxParametersSnapshot
         BoxParameters p = ToBoxParameters();
         return model is not null
             ? model.CreateCalculator(p)
-            : new BoxCalculator(p.BoxThickness, p.BoxWidth, p.BoxDepth, p.BoxHeight, p.Folga);
+            : new BoxCalculator(p);
     }
 
     private double ResolveDouble(double? primary, string legacyKey, double fallback)

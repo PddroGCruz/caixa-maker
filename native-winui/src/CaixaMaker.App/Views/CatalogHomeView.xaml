@@ -67,7 +67,7 @@
                                             FontSize="10"
                                             FontWeight="SemiBold"
                                             Foreground="{ThemeResource CmAccentHighlightBrush}"
-                                            Text="v2.3.0" />
+                                            Text="v2.4.0" />
                                     </Border>
                                 </StackPanel>
                                 <TextBlock
@@ -166,6 +166,65 @@
                                         <FontIcon FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="12" Foreground="{ThemeResource CmTextSecondaryBrush}" Glyph="&#xF158;" />
                                         <TextBlock x:Name="NavModelsText" VerticalAlignment="Center" FontSize="11.5" Foreground="{ThemeResource CmTextSecondaryBrush}" Text="Modelos Paramétricos" />
                                     </StackPanel>
+                                </Grid>
+                            </Button>
+
+                            <Button
+                                x:Name="NavNestingBtn"
+                                Height="30"
+                                Padding="0"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="OnOpenNestingFromCatalogClick"
+                                CornerRadius="{StaticResource CmControlCornerRadius}"
+                                ToolTipService.ToolTip="Abrir Otimizador de Corte 2D (SVG / DXF / Nesting) — Alt+4">
+                                <Grid>
+                                    <Border
+                                        Width="2"
+                                        Margin="0,4"
+                                        HorizontalAlignment="Left"
+                                        Background="Transparent" />
+                                    <Grid Margin="10,0,6,0" VerticalAlignment="Center" ColumnSpacing="6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon
+                                            Grid.Column="0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                            FontSize="12"
+                                            Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                            Glyph="&#xE80A;" />
+                                        <TextBlock
+                                            x:Name="NavNestingText"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            FontSize="11.5"
+                                            FontWeight="SemiBold"
+                                            Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                            Text="Otimizador de Corte"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <Border
+                                            Grid.Column="2"
+                                            Padding="4,1"
+                                            VerticalAlignment="Center"
+                                            Background="{ThemeResource CmAccentSelectionBrush}"
+                                            BorderBrush="{ThemeResource CmAccentHighlightBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource CmControlCornerRadius}">
+                                            <TextBlock
+                                                FontFamily="{StaticResource CmMonoFontFamily}"
+                                                FontSize="8.5"
+                                                FontWeight="SemiBold"
+                                                Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                                Text="SVG/DXF" />
+                                        </Border>
+                                    </Grid>
                                 </Grid>
                             </Button>
 
@@ -413,6 +472,54 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
+                        </Border>
+
+                        <!-- Cartão dedicado: Otimizador de Corte 2D (Nesting independente SVG/DXF) -->
+                        <Border
+                            Padding="12,9"
+                            Background="{ThemeResource CmPanelBackgroundBrush}"
+                            BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CmControlCornerRadius}">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontFamily="{StaticResource CmUiFontFamily}"
+                                            FontSize="12.5"
+                                            FontWeight="SemiBold"
+                                            Foreground="{ThemeResource CmTextPrimaryBrush}"
+                                            Text="Otimizador de Corte (SVG / DXF)" />
+                                        <primitives:CadStatusBadge Kind="Valid" Text="True-Shape 1:1" />
+                                    </StackPanel>
+                                    <TextBlock
+                                        FontSize="11"
+                                        Foreground="{ThemeResource CmTextSecondaryBrush}"
+                                        Text="Organize arquivos SVG/DXF externos e aproveite retalhos de MDF" />
+                                </StackPanel>
+
+                                <Button
+                                    x:Name="OpenNestingFromCatalogBtn"
+                                    Grid.Column="1"
+                                    Height="28"
+                                    Padding="12,0"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource CmAccentSelectionBrush}"
+                                    BorderBrush="{ThemeResource CmAccentHighlightBrush}"
+                                    BorderThickness="1"
+                                    Click="OnOpenNestingFromCatalogClick"
+                                    Content="Abrir Otimizador →"
+                                    FontWeight="SemiBold"
+                                    Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                    Style="{StaticResource CadSecondaryButtonStyle}"
+                                    ToolTipService.ToolTip="Abrir Otimizador de Corte 2D (SVG / DXF / Nesting) — Alt+4" />
+                            </Grid>
                         </Border>
 
                         <!-- Faixa Condicional de Rascunho Não Salvo (Height=36) -->
@@ -711,7 +818,7 @@
                         FontFamily="{StaticResource CmMonoFontFamily}"
                         FontSize="10.5"
                         Foreground="{ThemeResource CmTextSecondaryBrush}"
-                        Text="v2.3.0" />
+                        Text="v2.4.0" />
                 </StackPanel>
             </Grid>
         </Border>

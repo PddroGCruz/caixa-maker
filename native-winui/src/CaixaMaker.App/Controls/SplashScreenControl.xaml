@@ -87,7 +87,7 @@
                                     FontFamily="Consolas"
                                     FontSize="11"
                                     Foreground="#4ADE80"
-                                    Text="v2.3.0" />
+                                    Text="v2.4.0" />
                             </Border>
                         </StackPanel>
 

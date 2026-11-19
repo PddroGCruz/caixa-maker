@@ -225,6 +225,16 @@
                         Click="OnExportProjectPackageClick"
                         Content="Exportar Projeto Editável (.cmaker)"
                         Style="{StaticResource CadSegmentedButtonStyle}" />
+
+                    <Button
+                        x:Name="OpenNestingFromManufacturingBtn"
+                        Height="28"
+                        HorizontalAlignment="Stretch"
+                        Click="OnOpenNestingFromManufacturingClick"
+                        Content="Otimizar Chapas em Retalho / Lote (Nesting)"
+                        FontWeight="SemiBold"
+                        Style="{StaticResource CadActionButtonStyle}"
+                        ToolTipService.ToolTip="Envia instantaneamente em memória todas as chapas e personalizações para o Otimizador de Corte 2D" />
                 </StackPanel>
             </cad:CadSectionPane>
 

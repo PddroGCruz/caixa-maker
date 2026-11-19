@@ -162,12 +162,12 @@ public sealed partial class ModelingAreaRightPanel : UserControl
             [
                 new CadMetricItem(
                     "Encaixes verticais",
-                    string.Format(CultureInfo.InvariantCulture, "{0} dentes ({1:F1} mm)",
+                    string.Format(CultureInfo.GetCultureInfo("pt-BR"), "{0} dentes ({1:0.0} mm)",
                         summary.Joints.Vertical.Count, summary.Joints.Vertical.TabLengthMm)),
                 new CadMetricItem(
-                    "Encaixes da base",
-                    string.Format(CultureInfo.InvariantCulture, "{0} front. / {1} lat.",
-                        summary.Joints.FrontBottom.TabCount, summary.Joints.SideBottom.TabCount)),
+                    "Base (F / L)",
+                    _vm.BaseJointsSummaryDisplay,
+                    Tooltip: _vm.BaseJointsSummaryTooltip),
                 new CadMetricItem(
                     "Slot efetivo (t + folga)",
                     string.Format(CultureInfo.InvariantCulture, "{0:F2} mm", summary.ComputedDimensions.EffectiveSlotWidthMm),

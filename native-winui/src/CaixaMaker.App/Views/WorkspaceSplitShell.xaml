@@ -112,18 +112,22 @@
                     </Grid>
                 </Grid>
 
-                <!-- Centro estilo Fusion 360: Seletor de Área de Trabalho (Height=26) -->
-                <Border
+                <!-- Centro estilo Fusion 360: Seletor de Área de Trabalho (1→2→3) + Acesso Independente ao Otimizador -->
+                <StackPanel
                     Grid.Column="1"
-                    Height="26"
-                    Padding="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="{ThemeResource CmViewportCanvasBrush}"
-                    BorderBrush="{ThemeResource CmHairlineBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CmControlCornerRadius}">
-                    <StackPanel Orientation="Horizontal" Spacing="2">
+                    Orientation="Horizontal"
+                    Spacing="6">
+                    <Border
+                        Height="26"
+                        Padding="2"
+                        VerticalAlignment="Center"
+                        Background="{ThemeResource CmViewportCanvasBrush}"
+                        BorderBrush="{ThemeResource CmHairlineBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CmControlCornerRadius}">
+                        <StackPanel Orientation="Horizontal" Spacing="2">
                         <Button
                             x:Name="TabModelingBtn"
                             Height="20"
@@ -291,8 +295,46 @@
                             Foreground="{ThemeResource CmTextSecondaryBrush}"
                             Opacity="0.8"
                             Text="Alt+1..3" />
-                    </StackPanel>
-                </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Rectangle
+                        Width="1"
+                        Height="16"
+                        VerticalAlignment="Center"
+                        Fill="{ThemeResource CmHairlineBorderBrush}" />
+
+                    <Button
+                        x:Name="HeaderOpenNestingBtn"
+                        Height="26"
+                        MinWidth="0"
+                        MinHeight="26"
+                        Padding="9,0"
+                        VerticalAlignment="Center"
+                        Background="{ThemeResource CmAccentSelectionBrush}"
+                        BorderBrush="{ThemeResource CmAccentHighlightBrush}"
+                        BorderThickness="1"
+                        Click="OnOpenNestingHeaderClick"
+                        CornerRadius="{StaticResource CmControlCornerRadius}"
+                        Style="{StaticResource CadSecondaryButtonStyle}"
+                        ToolTipService.ToolTip="Abrir Otimizador de Corte 2D (SVG / DXF / Nesting) — Alt+4">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <FontIcon
+                                VerticalAlignment="Center"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                FontSize="11"
+                                Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                Glyph="&#xE80A;" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontFamily="{StaticResource CmUiFontFamily}"
+                                FontSize="11"
+                                FontWeight="SemiBold"
+                                Foreground="{ThemeResource CmAccentHighlightBrush}"
+                                Text="Otimizador" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
 
                 <!-- Direita: Status CNC + Tema + Preferências + Sobre -->
                 <StackPanel
@@ -1217,7 +1259,7 @@
                         FontFamily="{StaticResource CmMonoFontFamily}"
                         FontSize="10.5"
                         Foreground="{ThemeResource CmTextSecondaryBrush}"
-                        Text="v2.3.0" />
+                        Text="v2.4.0" />
                 </StackPanel>
             </Grid>
         </Border>

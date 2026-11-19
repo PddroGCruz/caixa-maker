@@ -77,6 +77,21 @@ public static class BoxParametersValidator
             parameters.Folga,
             BoxParameters.MinFolga,
             BoxParameters.MaxFolga);
+        CheckFiniteAndRange(
+            issues,
+            "target_finger_width_mm",
+            "Largura alvo do dente",
+            parameters.TargetFingerWidthMm,
+            BoxParameters.MinTargetFingerWidthMm,
+            BoxParameters.MaxTargetFingerWidthMm);
+        if (parameters.FixedFingerCount < BoxParameters.MinFixedFingerCount ||
+            parameters.FixedFingerCount > BoxParameters.MaxFixedFingerCount)
+        {
+            issues.Add(new BoxValidationIssue(
+                "OUT_OF_RANGE",
+                "fixed_finger_count",
+                $"Quantidade fixa de espigas ({parameters.FixedFingerCount}) deve estar entre {BoxParameters.MinFixedFingerCount} e {BoxParameters.MaxFixedFingerCount}."));
+        }
 
         if (issues.Count > 0)
         {
@@ -135,10 +150,10 @@ public static class BoxParametersValidator
         {
             try
             {
-                var nominalCalc = new BoxCalculator(t, w, d, h, folga: 0.0);
-                double verticalSegment = nominalCalc.GetJointLength(nominalCalc.CalcHeightJointSpan()).ActualLength;
-                double frontBottomSegment = nominalCalc.GetJointLength(w - 2.0 * t).ActualLength;
-                double sideBottomSegment = nominalCalc.GetJointLength(d - 2.0 * t).ActualLength;
+                var nominalCalc = new BoxCalculator(parameters with { Folga = 0.0 });
+                double verticalSegment = nominalCalc.GetVerticalJoints().ActualLength;
+                double frontBottomSegment = nominalCalc.GetFrontBottomJoints().ActualLength;
+                double sideBottomSegment = nominalCalc.GetSideBottomJoints().ActualLength;
 
                 double minSegment = Math.Min(verticalSegment, Math.Min(frontBottomSegment, sideBottomSegment));
                 if (minSegment - Math.Abs(folga) / 2.0 < MinAdjustedSegmentMm)
@@ -150,7 +165,7 @@ public static class BoxParametersValidator
                 }
 
                 // Validação adicional do próprio BoxCalculator com folga aplicada (ex.: segmento de extremidade).
-                _ = new BoxCalculator(t, w, d, h, folga);
+                _ = new BoxCalculator(parameters);
             }
             catch (ArgumentException ex)
             {

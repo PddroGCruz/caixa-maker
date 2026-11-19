@@ -72,6 +72,15 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
     private double _folga = BoxParameters.DefaultFolga;
 
     [ObservableProperty]
+    private FingerJointSizingMode _fingerJointMode = BoxParameters.DefaultFingerJointMode;
+
+    [ObservableProperty]
+    private double _targetFingerWidthMm = BoxParameters.DefaultTargetFingerWidthMm;
+
+    [ObservableProperty]
+    private int _fixedFingerCount = BoxParameters.DefaultFixedFingerCount;
+
+    [ObservableProperty]
     private DimensionReferenceMode _dimensionMode = DimensionReferenceMode.External;
 
     [ObservableProperty]
@@ -133,6 +142,34 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
     public double TotalCutPerimeterMeters => Summary?.TotalCutPerimeterMeters ?? 0.0;
     public bool IsExternalDimensionMode => DimensionMode == DimensionReferenceMode.External;
     public bool IsInternalDimensionMode => DimensionMode == DimensionReferenceMode.InternalUsable;
+    public bool IsFingerJointAutoMode => FingerJointMode == FingerJointSizingMode.Auto;
+    public bool IsFingerJointTargetSizeVisible => FingerJointMode == FingerJointSizingMode.TargetSizeMm;
+    public bool IsFingerJointFixedCountVisible => FingerJointMode == FingerJointSizingMode.FixedCount;
+
+    public string FingerJointAutoHintText => string.Format(
+        CultureInfo.GetCultureInfo("pt-BR"),
+        "Proporcional ao MDF (~{0:0.#} mm)",
+        BoxCalculator.ComputeAutoTargetFingerWidthMm(BoxThickness));
+
+    public string BaseJointsSummaryDisplay => Summary is null
+        ? "—"
+        : string.Format(
+            CultureInfo.GetCultureInfo("pt-BR"),
+            "{0}×{1:0.0} / {2}×{3:0.0} mm",
+            Summary.Joints.FrontBottom.TabCount,
+            Summary.Joints.FrontBottom.TabLengthMm,
+            Summary.Joints.SideBottom.TabCount,
+            Summary.Joints.SideBottom.TabLengthMm);
+
+    public string BaseJointsSummaryTooltip => Summary is null
+        ? string.Empty
+        : string.Format(
+            CultureInfo.GetCultureInfo("pt-BR"),
+            "{0} espigas frontais ({1:0.0} mm) / {2} espigas laterais ({3:0.0} mm)",
+            Summary.Joints.FrontBottom.TabCount,
+            Summary.Joints.FrontBottom.TabLengthMm,
+            Summary.Joints.SideBottom.TabCount,
+            Summary.Joints.SideBottom.TabLengthMm);
 
     public double InputWidth
     {
@@ -256,6 +293,9 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
         BoxDepth = BoxDepth,
         BoxHeight = BoxHeight,
         Folga = Folga,
+        FingerJointMode = FingerJointMode,
+        TargetFingerWidthMm = TargetFingerWidthMm,
+        FixedFingerCount = FixedFingerCount,
     };
 
     public ProjectViewerState ToViewerState(string activeSurfaceApiName) => new()
@@ -291,6 +331,9 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
                 BoxDepth = def.DefaultParameters.GetValueOrDefault("box_depth", BoxParameters.DefaultDepth);
                 BoxHeight = def.DefaultParameters.GetValueOrDefault("box_height", BoxParameters.DefaultHeight);
                 Folga = def.DefaultParameters.GetValueOrDefault("folga", BoxParameters.DefaultFolga);
+                FingerJointMode = BoxParameters.DefaultFingerJointMode;
+                TargetFingerWidthMm = BoxParameters.DefaultTargetFingerWidthMm;
+                FixedFingerCount = BoxParameters.DefaultFixedFingerCount;
             }
 
             if (!SupportsLidArticulation)
@@ -324,12 +367,16 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
             BoxDepth = parameters.BoxDepth;
             BoxHeight = parameters.BoxHeight;
             Folga = parameters.Folga;
+            FingerJointMode = parameters.FingerJointMode;
+            TargetFingerWidthMm = parameters.TargetFingerWidthMm;
+            FixedFingerCount = parameters.FixedFingerCount;
         }
         finally
         {
             _suppressRebuild = false;
         }
 
+        NotifyFingerJointModeProperties();
         RebuildGeometry(notifyEdit: markAsEdit);
     }
 
@@ -347,6 +394,9 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
             BoxDepth = parameters.BoxDepth;
             BoxHeight = parameters.BoxHeight;
             Folga = parameters.Folga;
+            FingerJointMode = parameters.FingerJointMode;
+            TargetFingerWidthMm = parameters.TargetFingerWidthMm;
+            FixedFingerCount = parameters.FixedFingerCount;
             ExplodedView = viewerState.Exploded;
             ShowDimensions = viewerState.ShowDimensions;
             LidAngle = SupportsLidArticulation
@@ -385,6 +435,7 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
         }
 
         NotifyModelMetadataChanged();
+        NotifyFingerJointModeProperties();
         RebuildGeometry(notifyEdit: false);
         ViewerStateChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -570,6 +621,12 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void SetFingerJointMode(FingerJointSizingMode mode)
+    {
+        FingerJointMode = mode;
+    }
+
+    [RelayCommand]
     public void ResetDefaultParameters()
     {
         IBoxModelDefinition def = SelectedModel;
@@ -581,6 +638,9 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
                 BoxDepth = def.DefaultParameters.GetValueOrDefault("box_depth", BoxParameters.DefaultDepth),
                 BoxHeight = def.DefaultParameters.GetValueOrDefault("box_height", BoxParameters.DefaultHeight),
                 Folga = def.DefaultParameters.GetValueOrDefault("folga", BoxParameters.DefaultFolga),
+                FingerJointMode = BoxParameters.DefaultFingerJointMode,
+                TargetFingerWidthMm = BoxParameters.DefaultTargetFingerWidthMm,
+                FixedFingerCount = BoxParameters.DefaultFixedFingerCount,
             },
             markAsEdit: true);
     }
@@ -685,6 +745,7 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
             }
         }
 
+        OnPropertyChanged(nameof(FingerJointAutoHintText));
         RebuildGeometry(notifyEdit: true);
     }
 
@@ -692,6 +753,23 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
     partial void OnBoxDepthChanged(double value) => HandleParameterPropertyChanged();
     partial void OnBoxHeightChanged(double value) => HandleParameterPropertyChanged();
     partial void OnFolgaChanged(double value) => HandleParameterPropertyChanged();
+
+    partial void OnFingerJointModeChanged(FingerJointSizingMode value)
+    {
+        NotifyFingerJointModeProperties();
+        HandleParameterPropertyChanged();
+    }
+
+    partial void OnTargetFingerWidthMmChanged(double value) => HandleParameterPropertyChanged();
+    partial void OnFixedFingerCountChanged(int value) => HandleParameterPropertyChanged();
+
+    private void NotifyFingerJointModeProperties()
+    {
+        OnPropertyChanged(nameof(IsFingerJointAutoMode));
+        OnPropertyChanged(nameof(IsFingerJointTargetSizeVisible));
+        OnPropertyChanged(nameof(IsFingerJointFixedCountVisible));
+        OnPropertyChanged(nameof(FingerJointAutoHintText));
+    }
 
     partial void OnDimensionModeChanged(DimensionReferenceMode value)
     {
@@ -802,6 +880,9 @@ public sealed partial class BoxWorkspaceViewModel : ObservableObject
         OnPropertyChanged(nameof(EstimatedAreaDisplay));
         OnPropertyChanged(nameof(TotalCutPerimeterDisplay));
         OnPropertyChanged(nameof(SvgCanvasSizeDisplay));
+        OnPropertyChanged(nameof(FingerJointAutoHintText));
+        OnPropertyChanged(nameof(BaseJointsSummaryDisplay));
+        OnPropertyChanged(nameof(BaseJointsSummaryTooltip));
 
         GeometryRebuilt?.Invoke(this, EventArgs.Empty);
         if (notifyEdit)

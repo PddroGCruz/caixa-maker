@@ -721,4 +721,12 @@ public sealed partial class ManufacturingAreaRightPanel : UserControl
 
     private void OnBackToPersonalizationClick(object sender, RoutedEventArgs e)
         => _mainVm?.NavigatePreviousWorkspace();
+
+    private async void OnOpenNestingFromManufacturingClick(object sender, RoutedEventArgs e)
+    {
+        if (_mainVm is not null)
+        {
+            await _mainVm.OpenNestingFromManufacturingAsync();
+        }
+    }
 }

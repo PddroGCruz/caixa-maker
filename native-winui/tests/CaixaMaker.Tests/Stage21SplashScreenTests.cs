@@ -146,7 +146,7 @@ public sealed class Stage21SplashScreenTests : IDisposable
         splashXaml.Should().Contain("CornerRadius=\"18\"");
         splashXaml.Should().Contain("Text=\"CAIXA\"");
         splashXaml.Should().Contain("Text=\"MAKER\"");
-        splashXaml.Should().Contain("Text=\"v2.3.0\"");
+        splashXaml.Should().Contain("Text=\"v2.4.0\"");
         splashXaml.Should().Contain("Modelagem Paramétrica e Fabricação Digital");
         splashXaml.Should().Contain("Laboratório IFMaker do Juruá • IFAC Cruzeiro do Sul  |  Pedro G. Cruz (PddroGCruz)");
         splashXaml.Should().Contain("Height=\"3\"");

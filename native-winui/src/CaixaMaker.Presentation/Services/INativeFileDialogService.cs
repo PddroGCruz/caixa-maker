@@ -17,6 +17,12 @@ public interface INativeFileDialogService
 {
     Task<string?> PickOpenFileAsync(string title, IReadOnlyList<NativeFileFilter> filters);
 
+    async Task<IReadOnlyList<string>> PickOpenFilesAsync(string title, IReadOnlyList<NativeFileFilter> filters)
+    {
+        string? single = await PickOpenFileAsync(title, filters);
+        return string.IsNullOrWhiteSpace(single) ? Array.Empty<string>() : [single];
+    }
+
     Task<string?> PickSaveFileAsync(string title, string suggestedFileName, IReadOnlyList<NativeFileFilter> filters);
 
     Task<UnsavedChangesDecision> PromptUnsavedChangesAsync(string projectName);
@@ -34,6 +40,7 @@ public interface INativeFileDialogService
 public sealed class NullNativeFileDialogService : INativeFileDialogService
 {
     public Func<string, IReadOnlyList<NativeFileFilter>, string?>? OnPickOpenFile { get; set; }
+    public Func<string, IReadOnlyList<NativeFileFilter>, IReadOnlyList<string>>? OnPickOpenFiles { get; set; }
     public Func<string, string, IReadOnlyList<NativeFileFilter>, string?>? OnPickSaveFile { get; set; }
     public Func<string, UnsavedChangesDecision>? OnPromptUnsavedChanges { get; set; }
     public Func<string, string, string?>? OnPromptProjectName { get; set; }
@@ -43,6 +50,17 @@ public sealed class NullNativeFileDialogService : INativeFileDialogService
 
     public Task<string?> PickOpenFileAsync(string title, IReadOnlyList<NativeFileFilter> filters)
         => Task.FromResult(OnPickOpenFile?.Invoke(title, filters));
+
+    public Task<IReadOnlyList<string>> PickOpenFilesAsync(string title, IReadOnlyList<NativeFileFilter> filters)
+    {
+        if (OnPickOpenFiles is not null)
+        {
+            return Task.FromResult(OnPickOpenFiles(title, filters));
+        }
+
+        string? single = OnPickOpenFile?.Invoke(title, filters);
+        return Task.FromResult<IReadOnlyList<string>>(string.IsNullOrWhiteSpace(single) ? Array.Empty<string>() : [single]);
+    }
 
     public Task<string?> PickSaveFileAsync(string title, string suggestedFileName, IReadOnlyList<NativeFileFilter> filters)
         => Task.FromResult(OnPickSaveFile?.Invoke(title, suggestedFileName, filters));

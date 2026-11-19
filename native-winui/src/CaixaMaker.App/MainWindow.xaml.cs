@@ -82,6 +82,7 @@ public sealed partial class MainWindow : Window
     {
         CatalogView.BindViewModel(ViewModel);
         WorkspaceShell.BindViewModel(ViewModel);
+        NestingView.BindViewModel(ViewModel);
 
         ViewModel.MenuStateChanged += (_, _) => SyncWindowChromeAndMenus();
         ViewModel.Theme.ThemeChanged += (_, resolved) => ApplyTheme(resolved);
@@ -123,8 +124,10 @@ public sealed partial class MainWindow : Window
     private void SyncWindowChromeAndMenus()
     {
         Title = ViewModel.WindowTitle;
-        CatalogView.Visibility = ViewModel.InDesigner ? Visibility.Collapsed : Visibility.Visible;
-        WorkspaceShell.Visibility = ViewModel.InDesigner ? Visibility.Visible : Visibility.Collapsed;
+        bool inNesting = ViewModel.IsInNestingWorkspace;
+        CatalogView.Visibility = !inNesting && !ViewModel.InDesigner ? Visibility.Visible : Visibility.Collapsed;
+        WorkspaceShell.Visibility = !inNesting && ViewModel.InDesigner ? Visibility.Visible : Visibility.Collapsed;
+        NestingView.Visibility = inNesting ? Visibility.Visible : Visibility.Collapsed;
 
         // 1. Arquivo
         MenuFileSave.IsEnabled = ViewModel.CanSaveProject;
@@ -169,9 +172,11 @@ public sealed partial class MainWindow : Window
         MenuAreaModeling.IsEnabled = ViewModel.InDesigner;
         MenuAreaPersonalization.IsEnabled = ViewModel.InDesigner;
         MenuAreaFabrication.IsEnabled = ViewModel.InDesigner;
-        MenuAreaModeling.IsChecked = ViewModel.IsModelingArea;
-        MenuAreaPersonalization.IsChecked = ViewModel.IsPersonalizationArea;
-        MenuAreaFabrication.IsChecked = ViewModel.IsFabricationArea;
+        MenuAreaModeling.IsChecked = !inNesting && ViewModel.IsModelingArea;
+        MenuAreaPersonalization.IsChecked = !inNesting && ViewModel.IsPersonalizationArea;
+        MenuAreaFabrication.IsChecked = !inNesting && ViewModel.IsFabricationArea;
+        MenuProjNesting.IsEnabled = true;
+        MenuProjNesting.IsChecked = inNesting;
 
         MenuProjExploded.IsEnabled = ViewModel.CanToggleExploded;
         MenuProjExploded.IsChecked = ViewModel.Box.ExplodedView;
@@ -320,6 +325,7 @@ public sealed partial class MainWindow : Window
                 VirtualKey.Number1 => DesktopCommandIds.ProjectAreaModeling,
                 VirtualKey.Number2 => DesktopCommandIds.ProjectAreaPersonalization,
                 VirtualKey.Number3 => DesktopCommandIds.ProjectAreaFabrication,
+                VirtualKey.Number4 or VirtualKey.NumberPad4 => DesktopCommandIds.ToolsNesting,
                 VirtualKey.E => DesktopCommandIds.ProjectToggleExploded,
                 VirtualKey.D => DesktopCommandIds.ProjectToggleLid,
                 VirtualKey.T => DesktopCommandIds.ProjectFocusText,

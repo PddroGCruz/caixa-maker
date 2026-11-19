@@ -1204,14 +1204,14 @@ public sealed partial class CmakerPackageService
         double t = raw.BoxThickness ?? (metadata.ThicknessMm > 0 ? metadata.ThicknessMm : BoxParameters.DefaultThickness);
         double f = raw.Folga ?? metadata.FolgaMm;
 
+        BoxParameters parsed = raw.ToBoxParameters();
         if (raw.ExtensionData is not null)
         {
-            BoxParameters fromExt = raw.ToBoxParameters();
-            if (!raw.BoxWidth.HasValue) w = fromExt.BoxWidth;
-            if (!raw.BoxDepth.HasValue) d = fromExt.BoxDepth;
-            if (!raw.BoxHeight.HasValue) h = fromExt.BoxHeight;
-            if (!raw.BoxThickness.HasValue) t = fromExt.BoxThickness;
-            if (!raw.Folga.HasValue) f = fromExt.Folga;
+            if (!raw.BoxWidth.HasValue) w = parsed.BoxWidth;
+            if (!raw.BoxDepth.HasValue) d = parsed.BoxDepth;
+            if (!raw.BoxHeight.HasValue) h = parsed.BoxHeight;
+            if (!raw.BoxThickness.HasValue) t = parsed.BoxThickness;
+            if (!raw.Folga.HasValue) f = parsed.Folga;
         }
 
         return new BoxParameters
@@ -1221,6 +1221,9 @@ public sealed partial class CmakerPackageService
             BoxHeight = Math.Clamp(h, BoxParameters.MinHeight, BoxParameters.MaxHeight),
             BoxThickness = Math.Clamp(t, BoxParameters.MinThickness, BoxParameters.MaxThickness),
             Folga = Math.Clamp(f, BoxParameters.MinFolga, BoxParameters.MaxFolga),
+            FingerJointMode = parsed.FingerJointMode,
+            TargetFingerWidthMm = parsed.TargetFingerWidthMm,
+            FixedFingerCount = parsed.FixedFingerCount,
         };
     }
 

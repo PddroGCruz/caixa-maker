@@ -463,6 +463,8 @@ public sealed partial class WorkspaceSplitShell : UserControl
     private void OnUndoClick(object sender, RoutedEventArgs e) => _vm?.Personalization.Undo();
     private void OnRedoClick(object sender, RoutedEventArgs e) => _vm?.Personalization.Redo();
 
+    private void OnOpenNestingHeaderClick(object sender, RoutedEventArgs e) => _vm?.OpenNestingIndependent();
+
     private async void OnAddTextClick(object sender, RoutedEventArgs e)
     {
         if (_vm is not null) await _vm.DispatchCommandAsync(DesktopCommandIds.ProjectFocusText);
